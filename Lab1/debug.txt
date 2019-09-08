@@ -1,0 +1,566 @@
+|  0|  2|  1|
+|  3|  5|  7|
+|  4|  6|  8|
+heuristic = 15
+projection = 15
+
+0 steps, going S:
+|  3|  2|  1|
+|  0|  5|  7|
+|  4|  6|  8|
+heuristic = 13
+projection = 13
+
+1 steps, going S:
+|  3|  2|  1|
+|  4|  5|  7|
+|  0|  6|  8|
+heuristic = 11
+projection = 11
+
+2 steps, going E:
+|  3|  2|  1|
+|  4|  5|  7|
+|  6|  0|  8|
+heuristic = 13
+projection = 13
+
+3 steps, going E:
+|  3|  2|  1|
+|  4|  5|  7|
+|  6|  8|  0|
+heuristic = 13
+projection = 13
+
+4 steps, going N:
+|  3|  2|  1|
+|  4|  5|  0|
+|  6|  8|  7|
+heuristic = 13
+projection = 13
+
+5 steps, going W:
+|  3|  2|  1|
+|  4|  0|  5|
+|  6|  8|  7|
+heuristic = 13
+projection = 13
+
+6 steps, going S:
+|  3|  2|  1|
+|  4|  8|  5|
+|  6|  0|  7|
+heuristic = 13
+projection = 13
+
+7 steps, going E:
+|  3|  2|  1|
+|  4|  8|  5|
+|  6|  7|  0|
+heuristic = 13
+projection = 13
+
+8 steps, going N:
+|  3|  2|  1|
+|  4|  8|  0|
+|  6|  7|  5|
+heuristic = 15
+projection = 15
+
+9 steps, going W:
+|  3|  2|  1|
+|  4|  0|  8|
+|  6|  7|  5|
+heuristic = 15
+projection = 15
+
+10 steps, going W:
+|  3|  2|  1|
+|  0|  4|  8|
+|  6|  7|  5|
+heuristic = 15
+projection = 15
+
+11 steps, going S:
+|  3|  2|  1|
+|  6|  4|  8|
+|  0|  7|  5|
+heuristic = 13
+projection = 13
+
+12 steps, going E:
+|  3|  2|  1|
+|  6|  4|  8|
+|  7|  0|  5|
+heuristic = 13
+projection = 13
+
+13 steps, going E:
+|  3|  2|  1|
+|  6|  4|  8|
+|  7|  5|  0|
+heuristic = 13
+projection = 13
+
+14 steps, going N:
+|  3|  2|  1|
+|  6|  4|  0|
+|  7|  5|  8|
+heuristic = 13
+projection = 13
+
+15 steps, going W:
+|  3|  2|  1|
+|  6|  0|  4|
+|  7|  5|  8|
+heuristic = 13
+projection = 13
+
+16 steps, going W:
+|  3|  2|  1|
+|  0|  6|  4|
+|  7|  5|  8|
+heuristic = 11
+projection = 11
+
+17 steps, going N:
+|  0|  2|  1|
+|  3|  6|  4|
+|  7|  5|  8|
+heuristic = 13
+projection = 13
+
+18 steps, going E:
+|  2|  0|  1|
+|  3|  6|  4|
+|  7|  5|  8|
+heuristic = 15
+projection = 15
+
+19 steps, going S:
+|  2|  6|  1|
+|  3|  0|  4|
+|  7|  5|  8|
+heuristic = 15
+projection = 15
+
+20 steps, going S:
+|  2|  6|  1|
+|  3|  5|  4|
+|  7|  0|  8|
+heuristic = 13
+projection = 13
+
+21 steps, going E:
+|  2|  6|  1|
+|  3|  5|  4|
+|  7|  8|  0|
+heuristic = 13
+projection = 13
+
+22 steps, going N:
+|  2|  6|  1|
+|  3|  5|  0|
+|  7|  8|  4|
+heuristic = 15
+projection = 15
+
+23 steps, going W:
+|  2|  6|  1|
+|  3|  0|  5|
+|  7|  8|  4|
+heuristic = 15
+projection = 15
+
+24 steps, going N:
+|  2|  0|  1|
+|  3|  6|  5|
+|  7|  8|  4|
+heuristic = 15
+projection = 15
+
+25 steps, going E:
+|  2|  1|  0|
+|  3|  6|  5|
+|  7|  8|  4|
+heuristic = 15
+projection = 15
+
+26 steps, going S:
+|  2|  1|  5|
+|  3|  6|  0|
+|  7|  8|  4|
+heuristic = 15
+projection = 15
+
+27 steps, going W:
+|  2|  1|  5|
+|  3|  0|  6|
+|  7|  8|  4|
+heuristic = 13
+projection = 13
+
+28 steps, going W:
+|  2|  1|  5|
+|  0|  3|  6|
+|  7|  8|  4|
+heuristic = 11
+projection = 11
+
+29 steps, going N:
+|  0|  1|  5|
+|  2|  3|  6|
+|  7|  8|  4|
+heuristic = 13
+projection = 13
+
+30 steps, going E:
+|  1|  0|  5|
+|  2|  3|  6|
+|  7|  8|  4|
+heuristic = 13
+projection = 13
+
+31 steps, going S:
+|  1|  3|  5|
+|  2|  0|  6|
+|  7|  8|  4|
+heuristic = 11
+projection = 11
+
+32 steps, going S:
+|  1|  3|  5|
+|  2|  8|  6|
+|  7|  0|  4|
+heuristic = 11
+projection = 11
+
+33 steps, going E:
+|  1|  3|  5|
+|  2|  8|  6|
+|  7|  4|  0|
+heuristic = 11
+projection = 11
+
+34 steps, going N:
+|  1|  3|  5|
+|  2|  8|  0|
+|  7|  4|  6|
+heuristic = 13
+projection = 13
+
+35 steps, going W:
+|  1|  3|  5|
+|  2|  0|  8|
+|  7|  4|  6|
+heuristic = 13
+projection = 13
+
+36 steps, going S:
+|  1|  3|  5|
+|  2|  4|  8|
+|  7|  0|  6|
+heuristic = 11
+projection = 11
+
+37 steps, going W:
+|  1|  3|  5|
+|  2|  4|  8|
+|  0|  7|  6|
+heuristic = 11
+projection = 11
+
+38 steps, going N:
+|  1|  3|  5|
+|  0|  4|  8|
+|  2|  7|  6|
+heuristic = 13
+projection = 13
+
+39 steps, going E:
+|  1|  3|  5|
+|  4|  0|  8|
+|  2|  7|  6|
+heuristic = 13
+projection = 13
+
+40 steps, going S:
+|  1|  3|  5|
+|  4|  7|  8|
+|  2|  0|  6|
+heuristic = 13
+projection = 13
+
+41 steps, going W:
+|  1|  3|  5|
+|  4|  7|  8|
+|  0|  2|  6|
+heuristic = 11
+projection = 11
+
+42 steps, going N:
+|  1|  3|  5|
+|  0|  7|  8|
+|  4|  2|  6|
+heuristic = 13
+projection = 13
+
+43 steps, going E:
+|  1|  3|  5|
+|  7|  0|  8|
+|  4|  2|  6|
+heuristic = 13
+projection = 13
+
+44 steps, going E:
+|  1|  3|  5|
+|  7|  8|  0|
+|  4|  2|  6|
+heuristic = 13
+projection = 13
+
+45 steps, going S:
+|  1|  3|  5|
+|  7|  8|  6|
+|  4|  2|  0|
+heuristic = 11
+projection = 11
+
+46 steps, going W:
+|  1|  3|  5|
+|  7|  8|  6|
+|  4|  0|  2|
+heuristic = 11
+projection = 11
+
+47 steps, going N:
+|  1|  3|  5|
+|  7|  0|  6|
+|  4|  8|  2|
+heuristic = 11
+projection = 11
+
+48 steps, going W:
+|  1|  3|  5|
+|  0|  7|  6|
+|  4|  8|  2|
+heuristic = 11
+projection = 11
+
+49 steps, going S:
+|  1|  3|  5|
+|  4|  7|  6|
+|  0|  8|  2|
+heuristic = 9
+projection = 9
+
+50 steps, going E:
+|  1|  3|  5|
+|  4|  7|  6|
+|  8|  0|  2|
+heuristic = 11
+projection = 11
+
+51 steps, going N:
+|  1|  3|  5|
+|  4|  0|  6|
+|  8|  7|  2|
+heuristic = 11
+projection = 11
+
+52 steps, going W:
+|  1|  3|  5|
+|  0|  4|  6|
+|  8|  7|  2|
+heuristic = 11
+projection = 11
+
+53 steps, going S:
+|  1|  3|  5|
+|  8|  4|  6|
+|  0|  7|  2|
+heuristic = 11
+projection = 11
+
+54 steps, going E:
+|  1|  3|  5|
+|  8|  4|  6|
+|  7|  0|  2|
+heuristic = 11
+projection = 11
+
+55 steps, going E:
+|  1|  3|  5|
+|  8|  4|  6|
+|  7|  2|  0|
+heuristic = 11
+projection = 11
+
+56 steps, going N:
+|  1|  3|  5|
+|  8|  4|  0|
+|  7|  2|  6|
+heuristic = 13
+projection = 13
+
+57 steps, going W:
+|  1|  3|  5|
+|  8|  0|  4|
+|  7|  2|  6|
+heuristic = 13
+projection = 13
+
+58 steps, going S:
+|  1|  3|  5|
+|  8|  2|  4|
+|  7|  0|  6|
+heuristic = 11
+projection = 11
+
+59 steps, going W:
+|  1|  3|  5|
+|  8|  2|  4|
+|  0|  7|  6|
+heuristic = 11
+projection = 11
+
+60 steps, going N:
+|  1|  3|  5|
+|  0|  2|  4|
+|  8|  7|  6|
+heuristic = 11
+projection = 11
+
+61 steps, going E:
+|  1|  3|  5|
+|  2|  0|  4|
+|  8|  7|  6|
+heuristic = 13
+projection = 13
+
+62 steps, going S:
+|  1|  3|  5|
+|  2|  7|  4|
+|  8|  0|  6|
+heuristic = 13
+projection = 13
+
+63 steps, going W:
+|  1|  3|  5|
+|  2|  7|  4|
+|  0|  8|  6|
+heuristic = 11
+projection = 11
+
+64 steps, going N:
+|  1|  3|  5|
+|  0|  7|  4|
+|  2|  8|  6|
+heuristic = 13
+projection = 13
+
+65 steps, going E:
+|  1|  3|  5|
+|  7|  0|  4|
+|  2|  8|  6|
+heuristic = 13
+projection = 13
+
+66 steps, going E:
+|  1|  3|  5|
+|  7|  4|  0|
+|  2|  8|  6|
+heuristic = 13
+projection = 13
+
+67 steps, going S:
+|  1|  3|  5|
+|  7|  4|  6|
+|  2|  8|  0|
+heuristic = 11
+projection = 11
+
+68 steps, going W:
+|  1|  3|  5|
+|  7|  4|  6|
+|  2|  0|  8|
+heuristic = 11
+projection = 11
+
+69 steps, going W:
+|  1|  3|  5|
+|  7|  4|  6|
+|  0|  2|  8|
+heuristic = 9
+projection = 9
+
+70 steps, going N:
+|  1|  3|  5|
+|  0|  4|  6|
+|  7|  2|  8|
+heuristic = 9
+projection = 9
+
+71 steps, going E:
+|  1|  3|  5|
+|  4|  0|  6|
+|  7|  2|  8|
+heuristic = 9
+projection = 9
+
+72 steps, going S:
+|  1|  3|  5|
+|  4|  2|  6|
+|  7|  0|  8|
+heuristic = 7
+projection = 7
+
+73 steps, going E:
+|  1|  3|  5|
+|  4|  2|  6|
+|  7|  8|  0|
+heuristic = 7
+projection = 7
+
+74 steps, going N:
+|  1|  3|  5|
+|  4|  2|  0|
+|  7|  8|  6|
+heuristic = 9
+projection = 9
+
+75 steps, going N:
+|  1|  3|  0|
+|  4|  2|  5|
+|  7|  8|  6|
+heuristic = 9
+projection = 9
+
+76 steps, going W:
+|  1|  0|  3|
+|  4|  2|  5|
+|  7|  8|  6|
+heuristic = 7
+projection = 7
+
+77 steps, going S:
+|  1|  2|  3|
+|  4|  0|  5|
+|  7|  8|  6|
+heuristic = 5
+projection = 5
+
+78 steps, going E:
+|  1|  2|  3|
+|  4|  5|  0|
+|  7|  8|  6|
+heuristic = 5
+projection = 5
+
+79 steps, going S:
+|  1|  2|  3|
+|  4|  5|  6|
+|  7|  8|  0|
+heuristic = 3
+projection = 3
+
