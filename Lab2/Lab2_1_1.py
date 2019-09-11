@@ -2,7 +2,7 @@
 import time, math, random, sys
 dims = [10, 15, 20, 25]
 #dims = [4, 5, 6]
-global dim, debug
+global dim, debug, tries
 
 
 def printMatrix(config, f):
@@ -67,12 +67,18 @@ class Node:
 
 
 def hillClimbing(initial):
+    global tries
+    tries = 0
     next = Node(initial)
-    current = None
-    while current is None or next.attacks < current.attacks:
-        current = next
-        printMatrix(current.config, debug)
-        next = current.next()
+    while next.attacks > 0:
+        next = Node(initial)
+        current = None
+        while current is None or next.attacks < current.attacks:
+            current = next
+            printMatrix(current.config, debug)
+            next = current.next()
+        initial = generateStart()
+        tries += 1
     return next
 
 
@@ -97,43 +103,52 @@ def simulatedAnnealling(initial, schedule):
 
 
 def hybrid(initial, schedule):
+    global tries
+    tries = 0
     current = Node(initial)
-    t = 0
-    T = schedule[t]
-    while T > 0:
-        printMatrix(current.config, debug)
-        if T%2==0:
-            next = current.randomNext()
-            delE = current.attacks - next.attacks
-            if delE < 0:
-                current = next
-                t += 1
-            else:
-                prob = random.random()
-                if prob < math.exp(-delE/T):
+    while current.attacks > 0:
+        current = Node(initial)
+        t = 0
+        T = schedule[t]
+        while T > 0:
+            printMatrix(current.config, debug)
+            if T%2==0:
+                next = current.randomNext()
+                delE = current.attacks - next.attacks
+                if delE < 0:
                     current = next
                     t += 1
-        else:
-            next = current.next()
-            if next.attacks >= current.attacks:
-                break
-            current = next
-            t+=1
-        T = schedule[t]
-
+                else:
+                    prob = random.random()
+                    if prob < math.exp(-delE/T):
+                        current = next
+                        t += 1
+            else:
+                next = current.next()
+                if next.attacks >= current.attacks:
+                    break
+                current = next
+                t+=1
+            T = schedule[t]
+        initial = generateStart()
+        tries += 1
     return current
 
+
+def generateStart():
+    config = []
+    for i in range(dim):
+        pos = random.randint(0, dim - 1)
+        while pos in config:
+            pos = random.randint(0, dim - 1)
+        config.append(pos)
+    return config
 
 if __name__ == '__main__':
     fans = open("answer.txt", "w")
     for dim in dims:
         debug = open("debug_HC_" + str(dim) + ".txt", "w")
-        config = []
-        for i in range(dim):
-            pos = random.randint(0,dim-1)
-            while pos in config:
-                pos = random.randint(0,dim-1)
-            config.append(pos)
+        config = generateStart()
         #printMatrix(config, sys.stdout)
         # Hill Climbing
         ini = time.time()
@@ -144,41 +159,45 @@ if __name__ == '__main__':
         fans.write("dim = {}\n".format(dim))
         printMatrix(answer.config, fans)
         print("Number of attacks remaining for dimension %d: %d" % (dim, checkConfig(answer.config)))
+        print("Number tries for dimension %d: %d" % (dim, tries))
         print("Delayed time for dimension %d: %.3f s" % (dim, delay))
         fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
+        fans.write("Number tries for dimension %d: %d\n" % (dim, tries))
         fans.write("Delayed time for dimension %d: %.3f s\n" % (dim, delay))
 
-        # Simulated Annealling
-        schedule = []
-        debug = open("debug_SA_" + str(dim) + ".txt", "w")
-        for i in range(dim*1000+1):
-            schedule.append(dim*1000-i)
-        ini = time.time()
-        answer = simulatedAnnealling(config, schedule)
-        delay = time.time() - ini
-        print("Simulated Annealling")
-        fans.write("Simulated Annealling\n")
-        fans.write("dim = {}\n".format(dim))
-        printMatrix(answer.config, fans)
-        print("Number of attacks remaining for dimension %d: %d" % (dim, checkConfig(answer.config)))
-        print("Delayed time for dimension %d: %.3f s" % (dim, delay))
-        fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
-        fans.write("Delayed time for dimension %d: %.3f s\n" % (dim, delay))
-
-        # Hybrid
-        schedule = []
-        debug = open("debug_H_" + str(dim) + ".txt", "w")
-        for i in range(dim*1000+1):
-            schedule.append(dim*1000-i)
-        ini = time.time()
-        answer = hybrid(config, schedule)
-        delay = time.time() - ini
-        print("Hybrid")
-        fans.write("Hybrid\n")
-        fans.write("dim = {}\n".format(dim))
-        printMatrix(answer.config, fans)
-        print("Number of attacks remaining for dimension %d: %d" % (dim, checkConfig(answer.config)))
-        print("Delayed time for dimension %d: %.3f s" % (dim, delay))
-        fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
-        fans.write("Delayed time for dimension %d: %.3f s\n" % (dim, delay))
+        # # Simulated Annealling
+        # schedule = []
+        # debug = open("debug_SA_" + str(dim) + ".txt", "w")
+        # for i in range(dim*1000+1):
+        #     schedule.append(dim*1000-i)
+        # ini = time.time()
+        # answer = simulatedAnnealling(config, schedule)
+        # delay = time.time() - ini
+        # print("Simulated Annealling")
+        # fans.write("Simulated Annealling\n")
+        # fans.write("dim = {}\n".format(dim))
+        # printMatrix(answer.config, fans)
+        # print("Number of attacks remaining for dimension %d: %d" % (dim, checkConfig(answer.config)))
+        # print("Delayed time for dimension %d: %.3f s" % (dim, delay))
+        # fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
+        # fans.write("Delayed time for dimension %d: %.3f s\n" % (dim, delay))
+        #
+        # # Hybrid
+        # schedule = []
+        # debug = open("debug_H_" + str(dim) + ".txt", "w")
+        # for i in range(dim*1000+1):
+        #     schedule.append(dim*1000-i)
+        # ini = time.time()
+        # answer = hybrid(config, schedule)
+        # delay = time.time() - ini
+        # print("Hybrid")
+        # fans.write("Hybrid\n")
+        # fans.write("dim = {}\n".format(dim))
+        # printMatrix(answer.config, fans)
+        # print("Number of attacks remaining for dimension %d: %d" % (dim, checkConfig(answer.config)))
+        # print("Number tries for dimension %d: %d" % (dim, tries))
+        # print("Delayed time for dimension %d: %.3f s" % (dim, delay))
+        # fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
+        # fans.write("Number tries for dimension %d: %d\n" % (dim, tries))
+        # fans.write("Delayed time for dimension %d: %.3f s\n" % (dim, delay))
 

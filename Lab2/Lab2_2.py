@@ -1,3 +1,5 @@
+import time
+
 houses = [1, 2, 3, 4, 5]
 people = ["norwegian", "english", "spanish", "ukrainian", "japanese"]
 colors = ["red", "yellow", "white", "blue", "green"]
@@ -169,7 +171,9 @@ if __name__ == '__main__':
             PSRVariable("cigarettes", permut)
         })
     )
+    ini = time.time()
     ansState = backtracking(problem)
+    delay = time.time() - ini
 
     print("ANSWER:")
     print("People:")
@@ -187,3 +191,4 @@ if __name__ == '__main__':
     print("Cigarettes:")
     for i in range(len(cigarettes)):
         print("\t{}: Casa {}".format(cigarettes[i], ansState.assigned["cigarettes"].value[i]))
+    print("Delay da solução: %.3f s" % delay)
