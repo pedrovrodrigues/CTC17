@@ -251,6 +251,7 @@ if __name__ == '__main__':
     ##################################
     # 3.2 DECISION TREE CLASSIFIER   #
     ##################################
+
     majority, prob = majorityRating(ratings)
     print("A priori: rating {} with probability {}".format(majority, prob))
     decisionTree = TreeNode(vars, ratings, majority, None, 0)
