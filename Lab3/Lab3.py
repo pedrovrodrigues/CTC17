@@ -53,39 +53,37 @@ class Rating:
     def getValue(self, var):
         if var.name == "name":
             if self.movie is None:
-                for movie in movies:
-                    if movie.id == self.movieid:
-                        self.movie = movie
-                        break
+                self.movie = findId(movies, self.movieid, 0, len(movies) - 1)
             return self.movie.name
         if var.name == "genre":
             if self.movie is None:
-                for movie in movies:
-                    if movie.id == self.movieid:
-                        self.movie = movie
-                        break
+                self.movie = findId(movies, self.movieid, 0, len(movies) - 1)
             return self.movie.genres
         if var.name == "age":
             if self.user is None:
-                for user in people:
-                    if user.id == self.userid:
-                        self.user = user
-                        break
+                self.user = findId(people, self.userid, 0, len(people) - 1)
             return self.user.age
         if var.name == "occupation":
             if self.user is None:
-                for user in people:
-                    if user.id == self.userid:
-                        self.user = user
-                        break
+                self.user = findId(people, self.userid, 0, len(people) - 1)
             return self.user.profession
         if var.name == "gender":
             if self.user is None:
-                for user in people:
-                    if user.id == self.userid:
-                        self.user = user
-                        break
+                self.user = findId(people, self.userid, 0, len(people) - 1)
             return self.user.gender
+
+
+def findId(vector, id, beg, end):
+    if vector[beg].id == id:
+        return vector[beg]
+
+    med = int((beg+end)/2)
+    if vector[med].id == id:
+        return vector[med]
+    elif vector[med].id > id:
+        return findId(vector, id, beg, med-1)
+    elif vector[med].id < id:
+        return findId(vector, id, med+1, end)
 
 
 def majorityRating(ratings):
@@ -162,12 +160,11 @@ class TreeNode:
                     examplesi.append(ex)
             varsi = vars.copy()
             varsi.remove(self.var)
-            print("Creating child with {} = {}".format(self.var.name, val))
-            self.children.append(TreeNode(varsi, examplesi, self.value, self, self.height + 1))
+            print("Creating child with {} = {} --> {} examples".format(self.var.name, val, len(examplesi)))
+            self.children.append(TreeNode(varsi, examplesi.copy(), self.value, self, self.height + 1))
 
 
 def printTree(root, f):
-    root = TreeNode()
     queue = [root]
     curheight = root.height
     val = None
@@ -215,78 +212,41 @@ if __name__ == '__main__':
     varoccup = Variable("occupation", [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
     vars.append(varoccup)
 
-    files = os.listdir("ml-1m")
-    if "full.txt" not in files:
-        people = []
-        peoplefile = open("ml-1m\\users.dat",  "r")
-        movies = []
-        moviesfile = open("ml-1m\\movies.dat", "r")
-        ratings = []
-        ratingfile = open("ml-1m\\ratings.dat","r")
+    people = []
+    peoplefile = open("ml-1m\\users.dat",  "r")
+    movies = []
+    moviesfile = open("ml-1m\\movies.dat", "r")
+    ratings = []
+    ratingfile = open("ml-1m\\ratings.dat","r")
 
-        for line in peoplefile.readlines():
-            user = int(line.split("::")[0])
-            gender = line.split("::")[1]
-            age = int(line.split("::")[0])
-            occupation = int(line.split("::")[0])
-            people.append(Person(user, gender, age, occupation))
-        print("Read people!")
-        for line in moviesfile.readlines():
-            id = int(line.split("::")[0])
-            name = line.split("::")[1]
-            year = int(name.split("(")[-1][0:-1])
-            name = name.split("(")[0][0:-1]
-            genres = line.replace("\n", "").split("::")[2].split("|")
-            movies.append(Movie(id, name, year, genres))
-        print("Read movies!")
-        for line in ratingfile.readlines():
-            user = int(line.split("::")[0])
-            movie = int(line.split("::")[1])
-            score = int(line.split("::")[2])
-            ratings.append(Rating(user, movie, score))
-        print("Read ratings!")
+    for line in peoplefile.readlines():
+        user = int(line.split("::")[0])
+        gender = line.split("::")[1]
+        age = int(line.split("::")[0])
+        occupation = int(line.split("::")[0])
+        people.append(Person(user, gender, age, occupation))
+    print("Read people!")
+    for line in moviesfile.readlines():
+        id = int(line.split("::")[0])
+        name = line.split("::")[1]
+        year = int(name.split("(")[-1][0:-1])
+        name = name.split("(")[0][0:-1]
+        genres = line.replace("\n", "").split("::")[2].split("|")
+        movies.append(Movie(id, name, year, genres))
+    print("Read movies!")
+    for line in ratingfile.readlines():
+        user = int(line.split("::")[0])
+        movie = int(line.split("::")[1])
+        score = int(line.split("::")[2])
+        ratings.append(Rating(user, movie, score))
+    print("Read ratings!")
 
-        print("Creating single file...")
-        fullfile = open("ml-1m\\full.txt", "w")
-        for r in ratings:
-            # userId :: gender :: age :: occupation :: movieId :: movieName :: movieYear :: movieGenres :: rating
-            if r.movie is None:
-                for movie in movies:
-                    if movie.id == r.movieid:
-                        r.movie = movie
-                        break
-            if r.user is None:
-                for user in people:
-                    if user.id == r.userid:
-                        r.user = user
-                        break
+    for r in ratings:
+        if r.movie is None:
+            r.movie = findId(movies, r.movieid, 0, len(movies)-1)
+        if r.user is None:
+            r.user = findId(people, r.userid, 0, len(people)-1)
 
-            fullfile.write("{}::{}::{}::{}::".format(r.userid, r.user.gender, r.user.age, r.user.profession))
-            fullfile.write("{}::{}::{}::".format(r.movieid, r.movie.name, r.movie.year))
-            for genre in r.movie.genres:
-                if genre != r.movie.genres[0]:
-                    fullfile.write("|")
-                fullfile.write("{}".format(genre))
-            fullfile.write("::{}\n".format(r.score))
-    else:
-        ratings = []
-        fullfile = open("ml-1m\\full.txt", "r")
-        # userId :: gender :: age :: occupation :: movieId :: movieName :: movieYear :: movieGenres :: rating
-        for line in fullfile.readlines():
-            uid = line.split("::")[0]
-            gender = line.split("::")[1]
-            age = line.split("::")[2]
-            occup = line.split("::")[3]
-            mid = line.split("::")[4]
-            mname = line.split("::")[5]
-            myear = line.split("::")[6]
-            genres = line.split("::")[7].split("|")
-            score = line.split("::")[8]
-            ratings.append(
-                Rating(uid, mid, score,
-                       Person(uid, genres, age, occup),
-                       Movie(mid, mname, myear, genres)
-                       ))
 
     ##################################
     # 3.2 DECISION TREE CLASSIFIER   #
