@@ -1,8 +1,6 @@
-# Busca de melhoria iterativa - N Rainhas
+# Busca de melhoria iterativa - Função
 import time, math, random, sys
-dims = [10, 15, 20, 25]
-#dims = [4, 5, 6]
-global dim, debug, tries, randrange
+global debug, randrange
 
 
 def calcFunc(x,y):
@@ -101,54 +99,66 @@ def generateStart():
 if __name__ == '__main__':
     randrange = 1
     fans = open("answer.txt", "w")
-    debug = open("debug_HC.txt", "w")
-    config = generateStart()
-    print("X = {}, Y = {}, F(X,Y) = {}".format(config[0], config[1], calcFunc(config[0], config[1])))
-    #printMatrix(config, sys.stdout)
-    # Hill Climbing
-    ini = time.time()
-    answer = hillClimbing(config,100)
-    delay = time.time() - ini
-    print("Hill Climbing")
-    fans.write("Hill Climbing\n")
-    print("X = {}, Y = {}, F(X,Y) = {}".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
-    fans.write("X = {}, Y = {}, F(X,Y) = {}\n".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
-    print("Delayed time: %.3f s" % (delay))
-    fans.write("Delayed time: %.3f s\n" % (delay))
-    debug.close()
+    maxLocHC = 0
+    maxGlobHC = 0
+    maxLocSA = 0
+    maxGlobSA = 0
+    acceptRadius = 1
+    for i in range(1000):
+        debug = open("debug_HC.txt", "w")
+        config = generateStart()
+        # print("X = {}, Y = {}, F(X,Y) = {}".format(config[0], config[1], calcFunc(config[0], config[1])))
+        # Hill Climbing
+        ini = time.time()
+        answer = hillClimbing(config,100)
+        delay = time.time() - ini
+        # print("Hill Climbing")
+        # fans.write("Hill Climbing\n")
+        # print("X = {}, Y = {}, F(X,Y) = {}".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
+        # fans.write("X = {}, Y = {}, F(X,Y) = {}\n".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
+        # print("Delayed time: %.3f s" % (delay))
+        # fans.write("Delayed time: %.3f s\n" % (delay))
+        debug.close()
+        if math.sqrt(answer[0]*answer[0] + answer[1]*answer[1]) <= acceptRadius:
+            maxGlobHC += 1
+        if math.sqrt((answer[0]-5)*(answer[0]-5) + (answer[1]-5)*(answer[1]-5)) <= acceptRadius:
+            maxLocHC += 1
+        if math.sqrt((answer[0]+5)*(answer[0]+5) + (answer[1]-5)*(answer[1]-5)) <= acceptRadius:
+            maxLocHC += 1
+        if math.sqrt((answer[0]-5)*(answer[0]-5) + (answer[1]+5)*(answer[1]+5)) <= acceptRadius:
+            maxLocHC += 1
+        if math.sqrt((answer[0]+5)*(answer[0]+5) + (answer[1]+5)*(answer[1]+5)) <= acceptRadius:
+            maxLocHC += 1
 
-    # Simulated Annealling
-    schedule = []
-    debug = open("debug_SA.txt", "w")
-    for i in range(100+1):
-        schedule.append(1-i/100)
-    ini = time.time()
-    answer = simulatedAnnealling(config, schedule)
-    delay = time.time() - ini
-    print("Simulated Annealling")
-    fans.write("Simulated Annealling\n")
-    print("X = {}, Y = {}, F(X,Y) = {}".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
-    fans.write("X = {}, Y = {}, F(X,Y) = {}\n".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
-    print("Delayed time: %.3f s" % (delay))
-    fans.write("Delayed time: %.3f s\n" % (delay))
+        # Simulated Annealling
+        schedule = []
+        debug = open("debug_SA.txt", "w")
+        for i in range(100+1):
+            schedule.append(1-i/100)
+        ini = time.time()
+        answer = simulatedAnnealling(config, schedule)
+        delay = time.time() - ini
+        # print("Simulated Annealling")
+        # fans.write("Simulated Annealling\n")
+        # print("X = {}, Y = {}, F(X,Y) = {}".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
+        # fans.write("X = {}, Y = {}, F(X,Y) = {}\n".format(answer[0], answer[1], calcFunc(answer[0], answer[1])))
+        # print("Delayed time: %.3f s" % (delay))
+        # fans.write("Delayed time: %.3f s\n" % (delay))
+        if math.sqrt(answer[0]*answer[0] + answer[1]*answer[1]) <= acceptRadius:
+            maxGlobSA += 1
+        if math.sqrt((answer[0]-5)*(answer[0]-5) + (answer[1]-5)*(answer[1]-5)) <= acceptRadius:
+            maxLocSA += 1
+        if math.sqrt((answer[0]+5)*(answer[0]+5) + (answer[1]-5)*(answer[1]-5)) <= acceptRadius:
+            maxLocSA += 1
+        if math.sqrt((answer[0]-5)*(answer[0]-5) + (answer[1]+5)*(answer[1]+5)) <= acceptRadius:
+            maxLocSA += 1
+        if math.sqrt((answer[0]+5)*(answer[0]+5) + (answer[1]+5)*(answer[1]+5)) <= acceptRadius:
+            maxLocSA += 1
 
-        # # Hybrid
-        # schedule = []
-        # debug = open("debug_H_" + str(dim) + ".txt", "w")
-        # for i in range(dim*1000+1):
-        #     schedule.append(dim*1000-i)
-        # ini = time.time()
-        # answer = hybrid(config, schedule)
-        # delay = time.time() - ini
-        # print("Hybrid")
-        # fans.write("Hybrid\n")
-        # fans.write("dim = {}\n".format(dim))
-        # printMatrix(answer.config, fans)
-        # print("Number of attacks remaining for dimension %d: %d" % (dim
-        # , checkConfig(answer.config)))
-        # print("Number tries for dimension %d: %d" % (dim, tries))
-        # print("Delayed time for dimension %d: %.3f s" % (dim, delay))
-        # fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
-        # fans.write("Number tries for dimension %d: %d\n" % (dim, tries))
-        # fans.write("Delayed time for dimension %d: %.3f s\n" % (dim, delay))
-
+    print("Acceptance radius: {}".format(acceptRadius))
+    print("Hill Climbing Performance: ")
+    print("\tGlobal Max: {}/1000 = {}".format(maxGlobHC, maxGlobHC/1000))
+    print("\tLocal Max: {}/1000 = {}".format(maxLocHC, maxLocHC/1000))
+    print("Simulated Annealling Performance: ")
+    print("\tGlobal Max: {}/1000 = {}".format(maxGlobSA, maxGlobSA/1000))
+    print("\tLocal Max: {}/1000 = {}".format(maxLocSA, maxLocSA/1000))
