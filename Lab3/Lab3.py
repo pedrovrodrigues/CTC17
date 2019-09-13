@@ -1,4 +1,5 @@
-import time, os
+import time, os, math
+# Legenda do código usado para profissões
 occupations = {
     0:  "other",
     1:  "academic/educator",
@@ -23,34 +24,43 @@ occupations = {
     20:  "writer"
 }
 
+
 class Variable:
+    # Classe Variable representa um dos atributos possíveis de uma rating, com nome e domínio
     def __init__(self, name, domain):
         self.name = name
         self.domain = domain
 
+
 class Movie:
+    # Classe Movie representa um filme, com id, nome, ano e lista de gêneros
     def __init__(self, id, name, year, genres):
         self.id = id
         self.name = name
         self.year = year
         self.genres = genres
 
+
 class Person:
+    # Classe Person representa um usuário, com id, gênero, idade e profissão
     def __init__(self, id, gender, age, profession):
         self.id = id
         self.gender = gender
         self.age = age
         self.profession = profession
 
+
 class Rating:
+    # Classe Rating representa uma avaliação, com sua pontuação, seu filme/id do filme ou usuário/id do usuário
     def __init__(self, userid, movieid, rating, user=None, movie=None):
         self.userid = userid
         self.user = user
         self.movieid = movieid
         self.movie = movie
         self.score = rating
-    
+
     def getValue(self, var):
+        # função para retornar os valores relativos a uma Variable recebida como parâmetro
         if var.name == "name":
             if self.movie is None:
                 self.movie = findId(movies, self.movieid, 0, len(movies) - 1)
@@ -74,6 +84,7 @@ class Rating:
 
 
 def findId(vector, id, beg, end):
+    # Busca binária para encontrar um usuário ou um filme com seu ID
     if vector[beg].id == id:
         return vector[beg]
 
@@ -86,7 +97,8 @@ def findId(vector, id, beg, end):
         return findId(vector, id, med+1, end)
 
 
-def majorityRating(ratings):
+def ratingCount(ratings):
+    # Função que retorna distribuição das pontuações da lista de ratings que é parâmetro
     counters = {
         1: 0,
         2: 0,
@@ -94,9 +106,14 @@ def majorityRating(ratings):
         4: 0,
         5: 0
     }
-
     for r in ratings:
         counters[r.score] += 1
+    return counters
+
+
+def majorityRating(ratings):
+    # Função que calcula a pontuação majoritária e a sua probabilidade
+    counters = ratingCount(ratings)
     cmax = 0
     rmax = 0
     for c, v in counters.items():
@@ -105,22 +122,85 @@ def majorityRating(ratings):
     return rmax, cmax/len(ratings)
 
 
+def separateVar(ratings, var):
+    # Função que separa uma lista de ratings em várias de acordo com uma variável
+    attrDict = {}
+    for val in var.domain:
+        attrDict[val] = []
+    for rat in ratings:
+        val = rat.getValue(var)
+        if type(val) is list:
+            for v in val:
+                attrDict[v].append(rat)
+        else:
+            attrDict[val].append(rat)
+    return attrDict
+
+
+def calcEntropy(ratings):
+    # Função que calcula a entropia de uma lista de ratings
+    counters = ratingCount(ratings)
+    total = 0
+    entropy = 0
+    for val in counters:
+        # print("\t\t\t\tval {}: {}".format(val, counters[val]))
+        total += counters[val]
+    # print("\t\t\tEntropy = ",end="")
+    for val in counters:
+        if counters[val] > 0:
+            percent = counters[val]/total
+            entropy += -1*percent*(math.log(percent,2))
+            # print("- {0:.3f} * log2({0:.3f}) (={1:.3f})".format(percent, entropy), end="")
+    # print("")
+    return entropy
+
+
 def chooseBest(vars, ratings):
-    return vars[0]
+    # Função que escolhe qual variável divide a lista de ratings com um maior ganho de informação (diminuição de entropia)
+    entropyInit = calcEntropy(ratings)
+    # print("Initial entropy: {}".format(entropyInit))
+    maxgain = 0
+    varmaxgain = None
+    for var in vars:
+        # print("\tSeparating with {}".format(var.name))
+        attrDict = separateVar(ratings, var)
+        newEntropy = 0
+        for val in var.domain:
+            ent = calcEntropy(attrDict[val])
+            attrsum = 0
+            for attr in attrDict:
+                attrsum += len(attrDict[attr])
+            # print("\t\tEntropy for value {}: {}/{} * {}".format(val, len(attrDict[val]), attrsum, ent))
+            newEntropy += (len(attrDict[val])/attrsum)*ent
+        gain = entropyInit - newEntropy
+        # print("\tNew entropy: {} --> gain: {}".format(newEntropy, gain))
+        varmaxgain = var if gain > maxgain else varmaxgain
+        maxgain = gain if gain > maxgain else maxgain
+    # print("Variable chosen: {}, with gain of {}".format(varmaxgain.name, maxgain))
+    return varmaxgain
 
 
 class TreeNode:
+    # Classe nó da árvore de decisão
     def __init__(self, vars, ratings, default, father, height):
-        # Test: is ratings empty?
+        # Função init é o algoritmo (recursivo)_de formação de árvore de decisão, que recebe a lista de ratings, de
+        # variáveis que ainda podem ser usadas para decisão, o valor default da pontuação, o pai do nó atual e a altura
+        # do nó atual
         self.father = father
         self.height = height
         self.children = []
 
-        if len(ratings) == 0:
-            print("No examples left, using default: {}".format(default))
+        # Test: are there too few ratings?
+        # pruningFactor = fator de poda, definido na main
+        # lenRat = tamanho da base de dados original, calculado na main
+        if len(ratings) < pruningFactor*lenRat:
             self.leaf = True
-            self.value = default
-            self.prob = 1
+            if len(ratings) == 0:
+                self.value = default
+                self.prob = 1
+            else:
+                self.value, self.prob = majorityRating(ratings)
+            print("Too few examples left, using default: {}".format(self.value))
             return
 
         # Test: are all ratings the same?
@@ -139,7 +219,7 @@ class TreeNode:
             self.prob = 1
             return
 
-        # Test: is there no more variables?
+        # Test: are there no more variables?
         if len(vars) == 0:
             self.leaf = True
             self.value, self.prob = majorityRating(ratings)
@@ -148,10 +228,17 @@ class TreeNode:
 
         # Algorithm
         self.var = chooseBest(vars, ratings)
-        print("Choosing to fan out variable {}".format(self.var.name))
-        self.leaf = False
         self.value, self.prob = majorityRating(ratings)
         print("Current prediction: {} with probability {}".format(self.value, self.prob))
+
+        # Em tese, esse if não deve ser acionado, mas vai que né
+        if self.var is None:
+            print("No gain in further fanning out, I guess.")
+            self.leaf = True
+            return
+
+        self.leaf = False
+        print("Choosing to fan out variable {}".format(self.var.name))
         for val in self.var.domain:
             examplesi = []
             for ex in ratings:
@@ -185,7 +272,7 @@ def printTree(root, f):
         else:
             branch = node.father.var.domain[node.father.children.index(node)]
             if node.leaf:
-                f.write("(leaf: {} = {}, rat:{} p:{})".format(node.father.var.name, branch, node.value, node.prob))
+                f.write("(leaf: {} = {}, rat:{} p:{:.3f})".format(node.father.var.name, branch, node.value, node.prob))
             else:
                 f.write("({} = {}, {}?)".format(node.father.var.name, branch, node.var.name))
                 queue.extend(node.children)
@@ -218,12 +305,12 @@ if __name__ == '__main__':
     moviesfile = open("ml-1m\\movies.dat", "r")
     ratings = []
     ratingfile = open("ml-1m\\ratings.dat","r")
-
+    ini = time.time()
     for line in peoplefile.readlines():
         user = int(line.split("::")[0])
         gender = line.split("::")[1]
-        age = int(line.split("::")[0])
-        occupation = int(line.split("::")[0])
+        age = int(line.split("::")[2])
+        occupation = int(line.split("::")[3])
         people.append(Person(user, gender, age, occupation))
     print("Read people!")
     for line in moviesfile.readlines():
@@ -240,20 +327,28 @@ if __name__ == '__main__':
         score = int(line.split("::")[2])
         ratings.append(Rating(user, movie, score))
     print("Read ratings!")
-
+    lenRat = len(ratings)
+    readTime = time.time() - ini
+    print("Reading time: %.3f s" % readTime)
+    ini = time.time()
     for r in ratings:
         if r.movie is None:
             r.movie = findId(movies, r.movieid, 0, len(movies)-1)
         if r.user is None:
             r.user = findId(people, r.userid, 0, len(people)-1)
+    joinTime = time.time() - ini
+    print("Joining time: %.3f s" % joinTime)
 
 
     ##################################
     # 3.2 DECISION TREE CLASSIFIER   #
     ##################################
 
+    pruningFactor = 0.001
     majority, prob = majorityRating(ratings)
     print("A priori: rating {} with probability {}".format(majority, prob))
+    # chooseBest(vars, ratings)
+
     decisionTree = TreeNode(vars, ratings, majority, None, 0)
     debug = open("debug.txt", "w")
     printTree(decisionTree, debug)
