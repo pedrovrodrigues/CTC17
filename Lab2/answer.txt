@@ -1,0 +1,6 @@
+Hill Climbing
+X = 4.879, Y = 5.178, F(X,Y) = 0.9547316239856926
+Delayed time: 0.059 s
+Simulated Annealling
+X = -1.232, Y = 15.38, F(X,Y) = 1.099423474925148e-53
+Delayed time: 0.002 s

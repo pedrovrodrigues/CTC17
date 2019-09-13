@@ -194,7 +194,8 @@ if __name__ == '__main__':
         # fans.write("Hybrid\n")
         # fans.write("dim = {}\n".format(dim))
         # printMatrix(answer.config, fans)
-        # print("Number of attacks remaining for dimension %d: %d" % (dim, checkConfig(answer.config)))
+        # print("Number of attacks remaining for dimension %d: %d" % (dim
+        # , checkConfig(answer.config)))
         # print("Number tries for dimension %d: %d" % (dim, tries))
         # print("Delayed time for dimension %d: %.3f s" % (dim, delay))
         # fans.write("Number of attacks remaining for dimension %d: %d\n" % (dim, checkConfig(answer.config)))
