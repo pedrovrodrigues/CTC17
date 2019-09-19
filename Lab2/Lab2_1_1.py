@@ -75,7 +75,6 @@ def hillClimbing(initial):
         current = None
         while current is None or next.attacks < current.attacks:
             current = next
-            printMatrix(current.config, debug)
             next = current.next()
         initial = generateStart()
         tries += 1
@@ -87,7 +86,6 @@ def simulatedAnnealling(initial, schedule):
     t = 0
     T = schedule[t]
     while T > 0:
-        printMatrix(current.config, debug)
         next = current.randomNext()
         delE = current.attacks - next.attacks
         if delE < 0:
@@ -147,9 +145,7 @@ def generateStart():
 if __name__ == '__main__':
     fans = open("answer.txt", "w")
     for dim in dims:
-        debug = open("debug_HC_" + str(dim) + ".txt", "w")
         config = generateStart()
-        #printMatrix(config, sys.stdout)
         # Hill Climbing
         ini = time.time()
         answer = hillClimbing(config)

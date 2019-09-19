@@ -1,4 +1,4 @@
-import time, os, math
+import time, os, math, random
 # Legenda do código usado para profissões
 occupations = {
     0:  "other",
@@ -278,10 +278,20 @@ def printTree(root, f):
                 queue.extend(node.children)
 
 
-
+def separateTrainingData(data, p):
+    train = []
+    test = []
+    for d in data:
+        decision = random.random()
+        if decision < p:
+            train.append(d)
+        else:
+            test.append(d)
+    return train, test
 
 
 if __name__ == '__main__':
+    ratio = 0.7
     ##################################
     # 3.1 DATA ANALYSIS              #
     ##################################
@@ -339,17 +349,21 @@ if __name__ == '__main__':
     joinTime = time.time() - ini
     print("Joining time: %.3f s" % joinTime)
 
-
+    print("Separating training and test...")
+    ini = time.time()
+    ratTrain, ratTest = separateTrainingData(ratings, ratio)
+    separTime = time.time() - ini
+    print("Separation time: %.3f s" % separTime)
     ##################################
     # 3.2 DECISION TREE CLASSIFIER   #
     ##################################
 
     pruningFactor = 0.001
-    majority, prob = majorityRating(ratings)
+    majority, prob = majorityRating(ratTrain)
     print("A priori: rating {} with probability {}".format(majority, prob))
     # chooseBest(vars, ratings)
 
-    decisionTree = TreeNode(vars, ratings, majority, None, 0)
+    decisionTree = TreeNode(vars, ratTrain, majority, None, 0)
     debug = open("debug.txt", "w")
     printTree(decisionTree, debug)
 

@@ -134,7 +134,7 @@ if __name__ == '__main__':
         schedule = []
         debug = open("debug_SA.txt", "w")
         for i in range(100+1):
-            schedule.append(1-i/100)
+            schedule.append(10-i/10)
         ini = time.time()
         answer = simulatedAnnealling(config, schedule)
         delay = time.time() - ini

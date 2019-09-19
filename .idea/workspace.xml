@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8d4eebe4-b621-43e8-92a4-8ae7f6e4d622" name="Default" comment="Lab3: Giving up on full file">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab2/Lab2_1_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/Lab2_1_1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/Lab2_1_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/Lab2_1_2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/answer.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/answer.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/debug_HC.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/debug_HC.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/debug_SA.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/debug_SA.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab3/Lab3.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab3/Lab3.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,47 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Lab2_2.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Lab2/Lab2_2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2992">
-              <caret line="176" selection-start-line="176" selection-end-line="176" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lab2_1_1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="191" column="21" selection-start-line="191" selection-start-column="21" selection-end-line="191" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lab2_1_2.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="124" column="21" lean-forward="true" selection-start-line="124" selection-start-column="21" selection-end-line="124" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Lab3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Lab3/Lab3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="329" column="25" lean-forward="true" selection-start-line="329" selection-start-column="25" selection-end-line="329" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="debug.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Lab3/debug.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="4" column="35040" lean-forward="true" selection-start-line="4" selection-start-column="35040" selection-end-line="4" selection-end-column="35040" />
+            <state relative-caret-position="312">
+              <caret line="378" lean-forward="true" selection-start-line="378" selection-end-line="378" />
             </state>
           </provider>
         </entry>
@@ -90,9 +59,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="width" value="993" />
-    <option name="height" value="745" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="699" />
+    <option name="height" value="754" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -107,6 +77,11 @@
             <path>
               <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
               <item name="CTC17" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CTC17" type="462c0819:PsiDirectoryNode" />
+              <item name="Lab2" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
@@ -140,7 +115,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Lab3">
+  <component name="RunManager" selected="Python.Lab2_1_2">
     <configuration name="Lab2_1_1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CTC17" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -221,9 +196,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Lab3" />
         <item itemvalue="Python.Lab2_1_2" />
         <item itemvalue="Python.Lab2_1_1" />
+        <item itemvalue="Python.Lab3" />
         <item itemvalue="Python.Lab2_2" />
       </list>
     </recent_temporary>
@@ -289,7 +264,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568321428435</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Lab3: Entropy calculations, pruning and attribute choosing">
+      <created>1568411638420</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1568411638420</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -303,7 +285,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50075644" side_tool="true" weight="0.32954547" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32954547" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.48051947" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.36038962" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49924356" weight="0.32954547" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -325,11 +307,12 @@
     <MESSAGE value="Working" />
     <MESSAGE value="Lab 2.1.1: Trying until 0, choosing only hill climbing" />
     <MESSAGE value="Lab3: Giving up on full file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lab3: Giving up on full file" />
+    <MESSAGE value="Lab3: Entropy calculations, pruning and attribute choosing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lab3: Entropy calculations, pruning and attribute choosing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -396,31 +379,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Lab2/debug_HC.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-13832" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="164" lean-forward="true" selection-start-line="164" selection-end-line="164" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="191" column="21" selection-start-line="191" selection-start-column="21" selection-end-line="191" selection-end-column="21" />
+        <state relative-caret-position="255">
+          <caret line="51" column="53" lean-forward="true" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Lab3/debug.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="4" column="35040" lean-forward="true" selection-start-line="4" selection-start-column="35040" selection-end-line="4" selection-end-column="35040" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="124" column="21" lean-forward="true" selection-start-line="124" selection-start-column="21" selection-end-line="124" selection-end-column="21" />
+        <state relative-caret-position="240">
+          <caret line="4" column="35002" selection-start-line="4" selection-start-column="35002" selection-end-line="4" selection-end-column="35002" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Lab3/Lab3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="329" column="25" lean-forward="true" selection-start-line="329" selection-start-column="25" selection-end-line="329" selection-end-column="25" />
+        <state relative-caret-position="312">
+          <caret line="378" lean-forward="true" selection-start-line="378" selection-end-line="378" />
         </state>
       </provider>
     </entry>
