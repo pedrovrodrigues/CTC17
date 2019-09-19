@@ -1,4 +1,4 @@
-import time, os, math, random
+import time, sys, math, random
 # Legenda do código usado para profissões
 occupations = {
     0:  "other",
@@ -23,6 +23,17 @@ occupations = {
     19:  "unemployed",
     20:  "writer"
 }
+
+
+def printMatrix(mat, f):
+    for i in range(len(mat) + 1):
+        f.write("|%3d" % i)
+    for i in range(len(mat)):
+        f.write("|%3d" % i)
+        for j in range(len(mat[i])):
+            f.write("|%3d" % mat[i][j])
+        f.write("|\n")
+    f.write("\n")
 
 
 class Variable:
@@ -290,6 +301,49 @@ def separateTrainingData(data, p):
     return train, test
 
 
+def applyTree(tree, testData):
+    # PLACEHOLDER
+    scores = []
+    for t in testData:
+        scores.append(t.score)
+    return scores
+
+
+def applyAPriori(testData):
+    # PLACEHOLDER
+    scores = []
+    for t in testData:
+        scores.append(t.score)
+    return scores
+
+
+def createConfusionMatrix(testData, results):
+    confMat = [[0 for i in range(5)] for j in range(5)]
+    for k in range(len(testData)):
+        i = result[k] - 1
+        j = testData[k].score - 1
+        confMat[i][j] += 1
+    return confMat
+
+
+def accuracy(mat):
+    errorMat = []
+    for i in range(5):
+        errorMat.append([])
+        for j in range(5):
+            errorMat[i].append(abs(i-j))
+    # den = pesoMax * nAmostras
+    den = 0
+    for i in range(5):
+        for j in range(5):
+            den += 4*mat[i][j]
+    error = 0
+    for i in range(5):
+        for j in range(5):
+            error += mat[i][j] * errorMat[i][j] / den
+    return 1 - error
+
+
 if __name__ == '__main__':
     ratio = 0.7
     ##################################
@@ -349,21 +403,14 @@ if __name__ == '__main__':
     joinTime = time.time() - ini
     print("Joining time: %.3f s" % joinTime)
 
-    print("Separating training and test...")
-    ini = time.time()
-    ratTrain, ratTest = separateTrainingData(ratings, ratio)
-    separTime = time.time() - ini
-    print("Separation time: %.3f s" % separTime)
     ##################################
     # 3.2 DECISION TREE CLASSIFIER   #
     ##################################
 
     pruningFactor = 0.001
-    majority, prob = majorityRating(ratTrain)
+    majority, prob = majorityRating(ratings)
     print("A priori: rating {} with probability {}".format(majority, prob))
-    # chooseBest(vars, ratings)
-
-    decisionTree = TreeNode(vars, ratTrain, majority, None, 0)
+    decisionTree = TreeNode(vars, ratings, majority, None, 0)
     debug = open("debug.txt", "w")
     printTree(decisionTree, debug)
 
@@ -374,5 +421,34 @@ if __name__ == '__main__':
     ##################################
     # 3.4 CLASSIFIER COMPARISON      #
     ##################################
+    print("Separating training and test...")
+    ini = time.time()
+    ratTrain, ratTest = separateTrainingData(ratings, ratio)
+    separTime = time.time() - ini
+    print("Separation time: %.3f s" % separTime)
 
+    # Treinamento da árvore só com os dados de treinamento
+    majority, prob = majorityRating(ratTrain)
+    print("A priori: rating {} with probability {}".format(majority, prob))
+    decisionTree = TreeNode(vars, ratTrain, majority, None, 0)
+    printTree(decisionTree, debug)
+
+    # Acurácia da árvore
+    result = applyTree(decisionTree, ratTest)
+    confMatrix = createConfusionMatrix(ratTest, result)
+    printMatrix(confMatrix, sys.stdout)
+    acTree = accuracy(confMatrix)
+
+    # Acurácia do classificador a priori
+    result = applyAPriori(ratTest)
+    confMatrix = createConfusionMatrix(ratTest, result)
+    printMatrix(confMatrix, sys.stdout)
+    acRandom = accuracy(confMatrix)
+
+    # Comparação dos classificadores
+    kappa = (acTree - acRandom)/(1-acRandom)
+    print("COMPARISON OF CLASSIFIERS")
+    print("Tree:     accuracy = %.3f" % acTree)
+    print("A Priori: accuracy = %.3f" % acRandom)
+    print("Kappa:               %.3f" % kappa)
 
