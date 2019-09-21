@@ -44,12 +44,13 @@ class Variable:
 
 
 class Movie:
-    # Classe Movie representa um filme, com id, nome, ano e lista de gêneros
-    def __init__(self, id, name, year, genres):
+    # Classe Movie representa um filme, com id, nome, ano e lista de gêneros e score
+    def __init__(self, id, name, year, genres, score):
         self.id = id
         self.name = name
         self.year = year
         self.genres = genres
+        self.score = score
 
 
 class Person:
@@ -94,18 +95,22 @@ class Rating:
             return self.user.gender
 
 
-def findId(vector, id, beg, end):
+def findId(vector, id, beg, end, cont):
     # Busca binária para encontrar um usuário ou um filme com seu ID
-    if vector[beg].id == id:
-        return vector[beg]
+    if cont == 20:
+        return vector[0]
+    else:
+        cont += 1
+        if vector[beg].id == id:
+            return vector[beg]
 
-    med = int((beg+end)/2)
-    if vector[med].id == id:
-        return vector[med]
-    elif vector[med].id > id:
-        return findId(vector, id, beg, med-1)
-    elif vector[med].id < id:
-        return findId(vector, id, med+1, end)
+        med = int((beg + end) / 2)
+        if vector[med].id == id:
+            return vector[med]
+        elif vector[med].id > id:
+            return findId(vector, id, beg, med - 1, cont)
+        elif vector[med].id < id:
+            return findId(vector, id, med + 1, end, cont)
 
 
 def ratingCount(ratings):
@@ -309,12 +314,10 @@ def applyTree(tree, testData):
     return scores
 
 
-def applyAPriori(testData):
+def applyAPriori(testData, filme_id):
     # PLACEHOLDER
-    scores = []
-    for t in testData:
-        scores.append(t.score)
-    return scores
+    aux = findId(testData, int(filme_id), 0, len(testData)-1, 0)
+    return aux.score
 
 
 def createConfusionMatrix(testData, results):
@@ -364,11 +367,17 @@ if __name__ == '__main__':
     vars.append(varoccup)
 
     people = []
-    peoplefile = open("ml-1m\\users.dat",  "r")
+    peoplefile = open("ml-1m/users.dat",  "r")
     movies = []
-    moviesfile = open("ml-1m\\movies.dat", "r")
+    moviesfile = open("ml-1m/movies.dat", encoding="ISO-8859-1")
     ratings = []
-    ratingfile = open("ml-1m\\ratings.dat","r")
+    ratingfile = open("ml-1m/ratings.dat","r")
+    # people = []
+    # peoplefile = open("ml-1m\\users.dat",  "r")
+    # movies = []
+    # moviesfile = open("ml-1m\\movies.dat", "r")
+    # ratings = []
+    # ratingfile = open("ml-1m\\ratings.dat","r")
     ini = time.time()
     for line in peoplefile.readlines():
         user = int(line.split("::")[0])
@@ -383,7 +392,8 @@ if __name__ == '__main__':
         year = int(name.split("(")[-1][0:-1])
         name = name.split("(")[0][0:-1]
         genres = line.replace("\n", "").split("::")[2].split("|")
-        movies.append(Movie(id, name, year, genres))
+        score = 0
+        movies.append(Movie(id, name, year, genres, score))
     print("Read movies!")
     for line in ratingfile.readlines():
         user = int(line.split("::")[0])
@@ -397,9 +407,9 @@ if __name__ == '__main__':
     ini = time.time()
     for r in ratings:
         if r.movie is None:
-            r.movie = findId(movies, r.movieid, 0, len(movies)-1)
+            r.movie = findId(movies, r.movieid, 0, len(movies)-1,0)
         if r.user is None:
-            r.user = findId(people, r.userid, 0, len(people)-1)
+            r.user = findId(people, r.userid, 0, len(people)-1,0)
     joinTime = time.time() - ini
     print("Joining time: %.3f s" % joinTime)
 
@@ -417,6 +427,50 @@ if __name__ == '__main__':
     ##################################
     # 3.3 RANDOM CLASSIFIER          #
     ##################################
+    print("Classificador a priori")
+
+    #obter o ultimo id de filme
+    prior = {}
+    n = len(movies)
+    final_id = (movies[n-1].id)
+
+    quant = [0]*(final_id + 1)
+    score = [0]*(final_id + 1)
+
+    # contabilizar score e avaliacoes por filme
+    for i in range(len(ratings)):
+        id = ratings[i].movieid
+        quant[id] += 1
+        score[id] += ratings[i].score
+
+
+    for i in range(len(quant)-1):
+        j = findId(movies,i+1,0, len(movies)-1,0)
+        if quant[i+1] == 0:
+            pass
+        else:
+            rate = score[i+1]/quant[i+1]
+            j.score = round(rate)
+
+
+    filme_id = input("Digite o id do filme:")
+    score = applyAPriori(movies, filme_id)
+    print("score do filme: ", filme_id, " e: ", score)
+
+    # IMPRESSAO DOS FILMES COM SEUS SCORES PARA CONFERENCIA
+    # arq = open("antes.txt", "w")
+    # for i in range(len(movies)):
+    #     arq.write(str(i + 1))
+    #     arq.write(" ")
+    #     arq.write(str(movies[i].id))
+    #     arq.write(" ")
+    #     arq.write(str(" {0:20s}".format(movies[i].name)))
+    #
+    #     arq.write(" ")
+    #     arq.write(str(movies[i].score))
+    #     arq.write("\n")
+    # arq.close()
+
 
     ##################################
     # 3.4 CLASSIFIER COMPARISON      #
