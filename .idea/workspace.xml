@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d4eebe4-b621-43e8-92a4-8ae7f6e4d622" name="Default" comment="Lab3: Giving up on full file">
+    <list default="true" id="8d4eebe4-b621-43e8-92a4-8ae7f6e4d622" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/Lab2_1_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/Lab2_1_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/Lab2_1_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/Lab2_1_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/answer.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/answer.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/PSR manual.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/PSR manual.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab2/debug_HC.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/debug_HC.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab2/debug_SA.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/debug_SA.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab3/Lab3.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab3/Lab3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab3/debug.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab3/debug.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,8 +21,17 @@
       <file leaf-file-name="Lab3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Lab3/Lab3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="378" lean-forward="true" selection-start-line="378" selection-end-line="378" />
+            <state relative-caret-position="108">
+              <caret line="247" selection-start-line="247" selection-end-line="247" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="debug.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Lab3/debug.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret lean-forward="true" />
             </state>
           </provider>
         </entry>
@@ -54,6 +62,7 @@
         <option value="$PROJECT_DIR$/Lab3/debug.txt" />
         <option value="$PROJECT_DIR$/Lab2/Lab2_1_1.py" />
         <option value="$PROJECT_DIR$/Lab2/Lab2_1_2.py" />
+        <option value="$PROJECT_DIR$/Lab1/Lab1_2PedroVasconcelos.py" />
         <option value="$PROJECT_DIR$/Lab3/Lab3.py" />
       </list>
     </option>
@@ -77,6 +86,11 @@
             <path>
               <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
               <item name="CTC17" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CTC17" type="462c0819:PsiDirectoryNode" />
+              <item name="Lab1" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
@@ -115,7 +129,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Lab2_1_2">
+  <component name="RunManager" selected="Python.Lab3">
     <configuration name="Lab2_1_1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CTC17" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -196,9 +210,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Lab3" />
         <item itemvalue="Python.Lab2_1_2" />
         <item itemvalue="Python.Lab2_1_1" />
-        <item itemvalue="Python.Lab3" />
         <item itemvalue="Python.Lab2_2" />
       </list>
     </recent_temporary>
@@ -271,7 +285,21 @@
       <option name="project" value="LOCAL" />
       <updated>1568411638420</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Lab3: Separating training and test">
+      <created>1568923533152</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1568923533220</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Lab3: Performance measures">
+      <created>1568925425881</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1568925425881</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -308,7 +336,9 @@
     <MESSAGE value="Lab 2.1.1: Trying until 0, choosing only hill climbing" />
     <MESSAGE value="Lab3: Giving up on full file" />
     <MESSAGE value="Lab3: Entropy calculations, pruning and attribute choosing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lab3: Entropy calculations, pruning and attribute choosing" />
+    <MESSAGE value="Lab3: Separating training and test" />
+    <MESSAGE value="Lab3: Performance measures" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lab3: Performance measures" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -393,22 +423,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="51" column="53" lean-forward="true" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
+        <state relative-caret-position="261">
+          <caret line="21" lean-forward="true" selection-start-line="7" selection-end-line="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Lab3/debug.txt">
+    <entry file="file://$PROJECT_DIR$/Lab1/Lab1_1PedroVasconcelos.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="4" column="35002" selection-start-line="4" selection-start-column="35002" selection-end-line="4" selection-end-column="35002" />
+        <state relative-caret-position="278">
+          <caret line="113" lean-forward="true" selection-start-line="98" selection-end-line="113" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Lab1/Lab1_2PedroVasconcelos.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="39" lean-forward="true" selection-start-line="39" selection-end-line="39" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/-1266515124/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="488" column="4" selection-start-line="488" selection-start-column="4" selection-end-line="488" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Lab3/Lab3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="378" lean-forward="true" selection-start-line="378" selection-end-line="378" />
+        <state relative-caret-position="108">
+          <caret line="247" selection-start-line="247" selection-end-line="247" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Lab3/debug.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
         </state>
       </provider>
     </entry>
