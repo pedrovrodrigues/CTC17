@@ -33,11 +33,12 @@ occupations = {
 
 def printMatrix(mat, f):
     for i in range(len(mat) + 1):
-        f.write("|%3d" % i)
+        f.write("|%6d" % i)
+    f.write("\n")
     for i in range(len(mat)):
-        f.write("|%3d" % i)
+        f.write("|%6d" % (i+1))
         for j in range(len(mat[i])):
-            f.write("|%3d" % mat[i][j])
+            f.write("|%6d" % mat[i][j])
         f.write("|\n")
     f.write("\n")
 
@@ -361,7 +362,8 @@ def applyAPriori(testData, test):
     score = []
     for i in range(len(test)):
         filme_id = test[i].movieid
-        score.append(findId(testData, int(filme_id), 0, len(testData)-1, 0))
+        aux = findId(testData, int(filme_id), 0, len(testData)-1, 0)
+        score.append(aux.score)
     return score
 
 def trainingAPriori(testData, ratings):
@@ -392,7 +394,7 @@ def createConfusionMatrix(testData, results):
     confMat = [[0 for i in range(5)] for j in range(5)]
     for k in range(len(testData)):
         i = results[k] - 1
-        j = int(testData[k].score) - 1
+        j = testData[k].score - 1
         confMat[i][j] += 1
     return confMat
 
@@ -491,14 +493,14 @@ if __name__ == '__main__':
     ##################################
 
     pruningFactor = 0.001
-    majority, prob = majorityRating(ratings)
-    print("A priori: rating {} with probability {}".format(majority, prob))
-    decisionTree = TreeNode(vars, ratings, majority, None, 0)
+    # majority, prob = majorityRating(ratings)
+    # print("A priori: rating {} with probability {}".format(majority, prob))
+    # decisionTree = TreeNode(vars, ratings, majority, None, 0)
 
     debug = open("debug.txt", "w")
     # printTree(decisionTree, debug)
-    tab = " "
-    printTree(decisionTree, debug, tab)
+    # tab = " "
+    # printTree(decisionTree, debug, tab)
 
 
     ##################################
@@ -536,14 +538,14 @@ if __name__ == '__main__':
     trainingAPriori(movies, ratTrain)
     # result e um vetorr com score de todos contidos no ratTest
     result = applyAPriori(movies, ratTest)
-    # confMatrix = createConfusionMatrix(ratTest, result)
-    # printMatrix(confMatrix, sys.stdout)
-    # acRandom = accuracy(confMatrix)
+    confMatrix = createConfusionMatrix(ratTest, result)
+    printMatrix(confMatrix, sys.stdout)
+    acRandom = accuracy(confMatrix)
 
-    # # Comparação dos classificadores
-    # kappa = (acTree - acRandom)/(1-acRandom)
-    # print("COMPARISON OF CLASSIFIERS")
-    # print("Tree:     accuracy = %.3f" % acTree)
-    # print("A Priori: accuracy = %.3f" % acRandom)
-    # print("Kappa:               %.3f" % kappa)
+    # Comparação dos classificadores
+    kappa = (acTree - acRandom)/(1-acRandom)
+    print("COMPARISON OF CLASSIFIERS")
+    print("Tree:     accuracy = %.3f" % acTree)
+    print("A Priori: accuracy = %.3f" % acRandom)
+    print("Kappa:               %.3f" % kappa)
 
