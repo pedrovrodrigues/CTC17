@@ -33,20 +33,12 @@ occupations = {
 
 def printMatrix(mat, f):
     for i in range(len(mat) + 1):
-<<<<<<< HEAD
-        f.write("|%5d" % i)
-    for i in range(len(mat)):
-        f.write("|%5d" % i)
-        for j in range(len(mat[i])):
-            f.write("|%5d" % mat[i][j])
-=======
         f.write("|%6d" % i)
     f.write("\n")
     for i in range(len(mat)):
         f.write("|%6d" % (i+1))
         for j in range(len(mat[i])):
             f.write("|%6d" % mat[i][j])
->>>>>>> a92787a37ee5035e3f86e54d58f83b9b2e398c6f
         f.write("|\n")
     f.write("\n")
 
@@ -259,86 +251,25 @@ class TreeNode:
         # Algorithm
         self.var = chooseBest(vars, ratings)
         self.value, self.prob = majorityRating(ratings)
-<<<<<<< HEAD
-        print("Current prediction: {} with probability {}".format(self.value, self.prob))
-=======
         # print("Current prediction: {} with probability {}".format(self.value, self.prob))
 
->>>>>>> a92787a37ee5035e3f86e54d58f83b9b2e398c6f
         # Em tese, esse if não deve ser acionado, mas vai que né
         if self.var is None:
             # print("No gain in further fanning out, I guess.")
             self.leaf = True
-<<<<<<< HEAD
-        print("Choosing to fan out variable {}".format(self.var.name))
-=======
             return
 
         self.leaf = False
+        examples = separateVar(ratings, self.var)
         # print("Choosing to fan out variable {}".format(self.var.name))
->>>>>>> a92787a37ee5035e3f86e54d58f83b9b2e398c6f
         for val in self.var.domain:
-                if (type(ex.getValue(self.var)) is not list and val == ex.getValue(self.var)) or\
-                        (type(ex.getValue(self.var)) is list and val in ex.getValue(self.var)):
-                    examplesi.append(ex)
+            examplesi = examples[val]
             varsi = vars.copy()
             varsi.remove(self.var)
             # print("Creating child with {} = {} --> {} examples".format(self.var.name, val, len(examplesi)))
             self.children.append(TreeNode(varsi, examplesi.copy(), self.value, self, self.height + 1))
 
 
-<<<<<<< HEAD
-def printTree(root, f):
-    stack = [root]
-    while len(stack) > 0:
-        node = stack[-1]
-        stack.pop(len(stack)-1)
-        for i in range(node.height):
-            f.write("\t")
-        if node.father is None:
-            if len(node.children) == 0:
-                f.write("rat: {}, prob: {:3f}\n".format(node.value, node.prob))
-            else:
-                f.write("rat: {}, prob: {:3f}, {}?\n".format(node.value, node.prob, node.var.name))
-                stack.extend(node.children)
-        else:
-            if len(node.children) == 0:
-                idx = node.father.children.index(node)
-                val = node.father.var.domain[idx]
-                f.write("value: {}, rat: {:3f}, prob: {}\n".format(val, node.value, node.prob))
-            else:
-                idx = node.father.children.index(node)
-                val = node.father.var.domain[idx]
-                f.write("value: {}, rat: {:3f}, prob: {}, {}?\n".format(val, node.value, node.prob, node.var.name))
-                stack.extend(node.children)
-
-
-# def printTree(root, f):
-#     queue = [root]
-#     curheight = root.height
-#     val = None
-#     count = 1
-#     while len(queue) > 0:
-#         node = queue[0]
-#         queue.pop(0)
-#         if curheight != node.height:
-#             count = 1
-#             f.write("\n")
-#             curheight = node.height
-#         if node.father is None:
-#             if node.leaf:
-#                 f.write("(leaf: rat:{}, p:{}".format(node.value, node.prob))
-#             else:
-#                 f.write("({}?)".format(node.var.name))
-#                 queue.extend(node.children)
-#         else:
-#             branch = node.father.var.domain[node.father.children.index(node)]
-#             if node.leaf:
-#                 f.write("(leaf: {} = {}, rat:{} p:{:.3f})".format(node.father.var.name, branch, node.value, node.prob))
-#             else:
-#                 f.write("({} = {}, {}?)".format(node.father.var.name, branch, node.var.name))
-#                 queue.extend(node.children)
-=======
 # def printTree(root, f):
 #     cont = 1
 #     queue = [root]
@@ -400,7 +331,6 @@ def printTree(root, f, tab):
                 # queue.extend(node.children)
                 for i in range(len(node.children)):
                     printTree(node.children[i], f, tab)
->>>>>>> a92787a37ee5035e3f86e54d58f83b9b2e398c6f
 
 
 def separateTrainingData(data, p):
@@ -558,17 +488,11 @@ if __name__ == '__main__':
     # 3.2 DECISION TREE CLASSIFIER   #
     ##################################
 
-<<<<<<< HEAD
-    majority, prob = majorityRating(ratings)
-    print("A priori: rating {} with probability {}".format(majority, prob))
-    decisionTree = TreeNode(vars, ratings, majority, None, 0)
-=======
     pruningFactor = 0.001
     # majority, prob = majorityRating(ratings)
     # print("A priori: rating {} with probability {}".format(majority, prob))
     # decisionTree = TreeNode(vars, ratings, majority, None, 0)
 
->>>>>>> a92787a37ee5035e3f86e54d58f83b9b2e398c6f
     debug = open("debug.txt", "w")
     # printTree(decisionTree, debug)
     # tab = " "
@@ -587,39 +511,6 @@ if __name__ == '__main__':
     ##################################
     # 3.4 CLASSIFIER COMPARISON      #
     ##################################
-<<<<<<< HEAD
-    # print("Separating training and test...")
-    # ini = time.time()
-    # ratTrain, ratTest = separateTrainingData(ratings, ratio)
-    # separTime = time.time() - ini
-    # print("Separation time: %.3f s" % separTime)
-    #
-    # # Treinamento da árvore só com os dados de treinamento
-    # majority, prob = majorityRating(ratTrain)
-    # print("A priori: rating {} with probability {}".format(majority, prob))
-    # decisionTree = TreeNode(vars, ratTrain, majority, None, 0)
-    # printTree(decisionTree, debug)
-    #
-    # # Acurácia da árvore
-    # result = applyTree(decisionTree, ratTest)
-    # confMatrix = createConfusionMatrix(ratTest, result)
-    # printMatrix(confMatrix, sys.stdout)
-    # acTree = accuracy(confMatrix)
-    #
-    # # Acurácia do classificador a priori
-    # result = applyAPriori(ratTest)
-    # confMatrix = createConfusionMatrix(ratTest, result)
-    # printMatrix(confMatrix, sys.stdout)
-    # acRandom = accuracy(confMatrix)
-    #
-    # # Comparação dos classificadores
-    # kappa = (acTree - acRandom)/(1-acRandom)
-    # print("COMPARISON OF CLASSIFIERS")
-    # print("Tree:     accuracy = %.3f" % acTree)
-    # print("A Priori: accuracy = %.3f" % acRandom)
-    # print("Kappa:               %.3f" % kappa)
-    #
-=======
     print("Separating training and test...")
     ini = time.time()
     ratTrain, ratTest = separateTrainingData(ratings, ratio)
@@ -656,5 +547,3 @@ if __name__ == '__main__':
     print("Tree:     accuracy = %.3f" % acTree)
     print("A Priori: accuracy = %.3f" % acRandom)
     print("Kappa:               %.3f" % kappa)
-
->>>>>>> a92787a37ee5035e3f86e54d58f83b9b2e398c6f
