@@ -102,13 +102,11 @@ class Rating:
             return self.user.gender
 
 
-def findId(vector, id, beg, end, cont):
+def findId(vector, id, beg, end):
     # Busca binária para encontrar um usuário ou um filme com seu ID
-    # MELHORAR CONDICAO DE PARADA
-    if cont == 50:
+    if beg > end:
         return vector[0]
     else:
-        cont += 1
         if vector[beg].id == id:
             return vector[beg]
 
@@ -116,9 +114,9 @@ def findId(vector, id, beg, end, cont):
         if vector[med].id == id:
             return vector[med]
         elif vector[med].id > id:
-            return findId(vector, id, beg, med - 1, cont)
+            return findId(vector, id, beg, med - 1)
         elif vector[med].id < id:
-            return findId(vector, id, med + 1, end, cont)
+            return findId(vector, id, med + 1, end)
 
 
 def ratingCount(ratings):
@@ -362,7 +360,7 @@ def applyAPriori(testData, test):
     score = []
     for i in range(len(test)):
         filme_id = test[i].movieid
-        aux = findId(testData, int(filme_id), 0, len(testData)-1, 0)
+        aux = findId(testData, int(filme_id), 0, len(testData)-1)
         score.append(aux.score)
     return score
 
@@ -382,7 +380,7 @@ def trainingAPriori(testData, ratings):
 
 
     for i in range(len(quant)-1):
-        j = findId(testData,i+1,0, len(testData)-1,0)
+        j = findId(testData,i+1,0, len(testData)-1)
         if quant[i+1] == 0:
             pass
         else:
@@ -482,9 +480,9 @@ if __name__ == '__main__':
     ini = time.time()
     for r in ratings:
         if r.movie is None:
-            r.movie = findId(movies, r.movieid, 0, len(movies)-1,0)
+            r.movie = findId(movies, r.movieid, 0, len(movies)-1)
         if r.user is None:
-            r.user = findId(people, r.userid, 0, len(people)-1,0)
+            r.user = findId(people, r.userid, 0, len(people)-1)
     joinTime = time.time() - ini
     print("Joining time: %.3f s" % joinTime)
 
@@ -541,6 +539,9 @@ if __name__ == '__main__':
     confMatrix = createConfusionMatrix(ratTest, result)
     printMatrix(confMatrix, sys.stdout)
     acRandom = accuracy(confMatrix)
+
+
+
 
     # Comparação dos classificadores
     kappa = (acTree - acRandom)/(1-acRandom)
