@@ -1,4 +1,10 @@
 import time, sys, math, random
+from treelib import Node, Tree
+
+tree = Tree()
+cont = 0
+
+
 # Legenda do código usado para profissões
 occupations = {
     0:  "other",
@@ -97,7 +103,8 @@ class Rating:
 
 def findId(vector, id, beg, end, cont):
     # Busca binária para encontrar um usuário ou um filme com seu ID
-    if cont == 20:
+    # MELHORAR CONDICAO DE PARADA
+    if cont == 50:
         return vector[0]
     else:
         cont += 1
@@ -216,7 +223,7 @@ class TreeNode:
                 self.prob = 1
             else:
                 self.value, self.prob = majorityRating(ratings)
-            print("Too few examples left, using default: {}".format(self.value))
+            # print("Too few examples left, using default: {}".format(self.value))
             return
 
         # Test: are all ratings the same?
@@ -229,7 +236,7 @@ class TreeNode:
                 equal = False
                 break
         if equal:
-            print("All examples equal, using value: {}".format(val))
+            # print("All examples equal, using value: {}".format(val))
             self.leaf = True
             self.value = val
             self.prob = 1
@@ -239,22 +246,22 @@ class TreeNode:
         if len(vars) == 0:
             self.leaf = True
             self.value, self.prob = majorityRating(ratings)
-            print("No variables left, using majority: {}".format(self.value))
+            # print("No variables left, using majority: {}".format(self.value))
             return
 
         # Algorithm
         self.var = chooseBest(vars, ratings)
         self.value, self.prob = majorityRating(ratings)
-        print("Current prediction: {} with probability {}".format(self.value, self.prob))
+        # print("Current prediction: {} with probability {}".format(self.value, self.prob))
 
         # Em tese, esse if não deve ser acionado, mas vai que né
         if self.var is None:
-            print("No gain in further fanning out, I guess.")
+            # print("No gain in further fanning out, I guess.")
             self.leaf = True
             return
 
         self.leaf = False
-        print("Choosing to fan out variable {}".format(self.var.name))
+        # print("Choosing to fan out variable {}".format(self.var.name))
         for val in self.var.domain:
             examplesi = []
             for ex in ratings:
@@ -263,15 +270,46 @@ class TreeNode:
                     examplesi.append(ex)
             varsi = vars.copy()
             varsi.remove(self.var)
-            print("Creating child with {} = {} --> {} examples".format(self.var.name, val, len(examplesi)))
+            # print("Creating child with {} = {} --> {} examples".format(self.var.name, val, len(examplesi)))
             self.children.append(TreeNode(varsi, examplesi.copy(), self.value, self, self.height + 1))
 
 
-def printTree(root, f):
+# def printTree(root, f):
+#     cont = 1
+#     queue = [root]
+#     curheight = root.height
+#     val = None
+#     count = 1
+#     while len(queue) > 0:
+#         node = queue[0]
+#         queue.pop(0)
+#         if curheight != node.height:
+#             count = 1
+#             f.write("\n")
+#             curheight = node.height
+#         if node.father is None:
+#             if node.leaf:
+#                 f.write("\t\t(leaf: rat:{}, p:{}\n".format(node.value, node.prob))
+#
+#             else:
+#                 f.write("\t({}?)\n".format(node.var.name))
+#                 queue.extend(node.children)
+#         else:
+#             branch = node.father.var.domain[node.father.children.index(node)]
+#             if node.leaf:
+#                 f.write("\t\t(leaf: {} = {}, rat:{} p:{:.3f})\n".format(node.father.var.name, branch, node.value, node.prob))
+#             else:
+#                 f.write("\t({} = {}, {}?)\n".format(node.father.var.name, branch, node.var.name))
+#                 queue.extend(node.children)
+
+def printTree(root, f, tab):
+    cont = 1
     queue = [root]
     curheight = root.height
     val = None
     count = 1
+    tab += "\t"
+
     while len(queue) > 0:
         node = queue[0]
         queue.pop(0)
@@ -281,17 +319,22 @@ def printTree(root, f):
             curheight = node.height
         if node.father is None:
             if node.leaf:
-                f.write("(leaf: rat:{}, p:{}".format(node.value, node.prob))
+                f.write("{}(leaf: rat:{}, p:{}\n".format(tab,node.value, node.prob))
+
             else:
-                f.write("({}?)".format(node.var.name))
-                queue.extend(node.children)
+                f.write("{}({}?)\n".format(tab,node.var.name))
+                # queue.extend(node.children)
+                for i in range(len(node.children)):
+                    printTree(node.children[i], f, tab)
         else:
             branch = node.father.var.domain[node.father.children.index(node)]
             if node.leaf:
-                f.write("(leaf: {} = {}, rat:{} p:{:.3f})".format(node.father.var.name, branch, node.value, node.prob))
+                f.write("{}(leaf: {} = {}, rat:{} p:{:.3f})\n".format(tab,node.father.var.name, branch, node.value, node.prob))
             else:
-                f.write("({} = {}, {}?)".format(node.father.var.name, branch, node.var.name))
-                queue.extend(node.children)
+                f.write("{}({} = {}, {}?)\n".format(tab,node.father.var.name, branch, node.var.name))
+                # queue.extend(node.children)
+                for i in range(len(node.children)):
+                    printTree(node.children[i], f, tab)
 
 
 def separateTrainingData(data, p):
@@ -314,17 +357,42 @@ def applyTree(tree, testData):
     return scores
 
 
-def applyAPriori(testData, filme_id):
-    # PLACEHOLDER
-    aux = findId(testData, int(filme_id), 0, len(testData)-1, 0)
-    return aux.score
+def applyAPriori(testData, test):
+    score = []
+    for i in range(len(test)):
+        filme_id = test[i].movieid
+        score.append(findId(testData, int(filme_id), 0, len(testData)-1, 0))
+    return score
+
+def trainingAPriori(testData, ratings):
+    #obter o ultimo id de filme
+    n = len(testData)
+    final_id = (testData[n-1].id)
+
+    quant = [0]*(final_id + 1)
+    score = [0]*(final_id + 1)
+
+    # contabilizar score e avaliacoes por filme
+    for i in range(len(ratings)):
+        id = ratings[i].movieid
+        quant[id] += 1
+        score[id] += ratings[i].score
+
+
+    for i in range(len(quant)-1):
+        j = findId(testData,i+1,0, len(testData)-1,0)
+        if quant[i+1] == 0:
+            pass
+        else:
+            rate = score[i+1]/quant[i+1]
+            j.score = round(rate)
 
 
 def createConfusionMatrix(testData, results):
     confMat = [[0 for i in range(5)] for j in range(5)]
     for k in range(len(testData)):
-        i = result[k] - 1
-        j = testData[k].score - 1
+        i = results[k] - 1
+        j = int(testData[k].score) - 1
         confMat[i][j] += 1
     return confMat
 
@@ -345,6 +413,7 @@ def accuracy(mat):
         for j in range(5):
             error += mat[i][j] * errorMat[i][j] / den
     return 1 - error
+
 
 
 if __name__ == '__main__':
@@ -372,12 +441,16 @@ if __name__ == '__main__':
     moviesfile = open("ml-1m/movies.dat", encoding="ISO-8859-1")
     ratings = []
     ratingfile = open("ml-1m/ratings.dat","r")
+
+    #TRECHO ALTERADO PARA QUE FUNCIONE NO MAC
+    # ratingfile = open("ml-1m/rat.txt","r")
     # people = []
     # peoplefile = open("ml-1m\\users.dat",  "r")
     # movies = []
     # moviesfile = open("ml-1m\\movies.dat", "r")
     # ratings = []
     # ratingfile = open("ml-1m\\ratings.dat","r")
+
     ini = time.time()
     for line in peoplefile.readlines():
         user = int(line.split("::")[0])
@@ -421,56 +494,21 @@ if __name__ == '__main__':
     majority, prob = majorityRating(ratings)
     print("A priori: rating {} with probability {}".format(majority, prob))
     decisionTree = TreeNode(vars, ratings, majority, None, 0)
+
     debug = open("debug.txt", "w")
-    printTree(decisionTree, debug)
+    # printTree(decisionTree, debug)
+    tab = " "
+    printTree(decisionTree, debug, tab)
+
 
     ##################################
     # 3.3 RANDOM CLASSIFIER          #
     ##################################
     print("Classificador a priori")
 
-    #obter o ultimo id de filme
-    prior = {}
-    n = len(movies)
-    final_id = (movies[n-1].id)
-
-    quant = [0]*(final_id + 1)
-    score = [0]*(final_id + 1)
-
-    # contabilizar score e avaliacoes por filme
-    for i in range(len(ratings)):
-        id = ratings[i].movieid
-        quant[id] += 1
-        score[id] += ratings[i].score
-
-
-    for i in range(len(quant)-1):
-        j = findId(movies,i+1,0, len(movies)-1,0)
-        if quant[i+1] == 0:
-            pass
-        else:
-            rate = score[i+1]/quant[i+1]
-            j.score = round(rate)
-
-
-    filme_id = input("Digite o id do filme:")
-    score = applyAPriori(movies, filme_id)
-    print("score do filme: ", filme_id, " e: ", score)
-
-    # IMPRESSAO DOS FILMES COM SEUS SCORES PARA CONFERENCIA
-    # arq = open("antes.txt", "w")
-    # for i in range(len(movies)):
-    #     arq.write(str(i + 1))
-    #     arq.write(" ")
-    #     arq.write(str(movies[i].id))
-    #     arq.write(" ")
-    #     arq.write(str(" {0:20s}".format(movies[i].name)))
-    #
-    #     arq.write(" ")
-    #     arq.write(str(movies[i].score))
-    #     arq.write("\n")
-    # arq.close()
-
+    # ESTE TREINO PODE SER EXCLUIDO
+    # treinando classificador com todos os dados
+    trainingAPriori(movies, ratings)
 
     ##################################
     # 3.4 CLASSIFIER COMPARISON      #
@@ -485,7 +523,8 @@ if __name__ == '__main__':
     majority, prob = majorityRating(ratTrain)
     print("A priori: rating {} with probability {}".format(majority, prob))
     decisionTree = TreeNode(vars, ratTrain, majority, None, 0)
-    printTree(decisionTree, debug)
+    tab = " "
+    printTree(decisionTree, debug, tab)
 
     # Acurácia da árvore
     result = applyTree(decisionTree, ratTest)
@@ -494,15 +533,17 @@ if __name__ == '__main__':
     acTree = accuracy(confMatrix)
 
     # Acurácia do classificador a priori
-    result = applyAPriori(ratTest)
-    confMatrix = createConfusionMatrix(ratTest, result)
-    printMatrix(confMatrix, sys.stdout)
-    acRandom = accuracy(confMatrix)
+    trainingAPriori(movies, ratTrain)
+    # result e um vetorr com score de todos contidos no ratTest
+    result = applyAPriori(movies, ratTest)
+    # confMatrix = createConfusionMatrix(ratTest, result)
+    # printMatrix(confMatrix, sys.stdout)
+    # acRandom = accuracy(confMatrix)
 
-    # Comparação dos classificadores
-    kappa = (acTree - acRandom)/(1-acRandom)
-    print("COMPARISON OF CLASSIFIERS")
-    print("Tree:     accuracy = %.3f" % acTree)
-    print("A Priori: accuracy = %.3f" % acRandom)
-    print("Kappa:               %.3f" % kappa)
+    # # Comparação dos classificadores
+    # kappa = (acTree - acRandom)/(1-acRandom)
+    # print("COMPARISON OF CLASSIFIERS")
+    # print("Tree:     accuracy = %.3f" % acTree)
+    # print("A Priori: accuracy = %.3f" % acRandom)
+    # print("Kappa:               %.3f" % kappa)
 
