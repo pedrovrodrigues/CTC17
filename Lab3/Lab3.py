@@ -35,7 +35,7 @@ occupations = {
 def printMatrix(mat, f):
     for i in range(len(mat) + 1):
         f.write("|%6d" % i)
-    f.write("\n")
+    f.write("|\n")
     for i in range(len(mat)):
         f.write("|%6d" % (i+1))
         for j in range(len(mat[i])):
@@ -270,41 +270,12 @@ class TreeNode:
             # print("Creating child with {} = {} --> {} examples".format(self.var.name, val, len(examplesi)))
             self.children.append(TreeNode(varsi, examplesi.copy(), self.dist, self, self.height + 1))
 
-# def printTree(root, f):
-#     cont = 1
-#     queue = [root]
-#     curheight = root.height
-#     val = None
-#     count = 1
-#     while len(queue) > 0:
-#         node = queue[0]
-#         queue.pop(0)
-#         if curheight != node.height:
-#             count = 1
-#             f.write("\n")
-#             curheight = node.height
-#         if node.father is None:
-#             if node.leaf:
-#                 f.write("\t\t(leaf: rat:{}, p:{}\n".format(node.value, node.prob))
-#
-#             else:
-#                 f.write("\t({}?)\n".format(node.var.name))
-#                 queue.extend(node.children)
-#         else:
-#             branch = node.father.var.domain[node.father.children.index(node)]
-#             if node.leaf:
-#                 f.write("\t\t(leaf: {} = {}, rat:{} p:{:.3f})\n".format(node.father.var.name, branch, node.value, node.prob))
-#             else:
-#                 f.write("\t({} = {}, {}?)\n".format(node.father.var.name, branch, node.var.name))
-#                 queue.extend(node.children)
-
 def printTree(root, f, tab):
-    cont = 1
     queue = [root]
     curheight = root.height
     val = None
     count = 1
-    tab += "\t"
+    tab = "|\t" + tab
 
     while len(queue) > 0:
         node = queue[0]
@@ -360,11 +331,14 @@ def applyTree(tree, testData):
         arq3.write("termino:r {} p {}\n".format(r, prob))
         arq3.write("-----------------------------------\n")
 
+        if r!= 1 and r!= 2 and r!=3 and r!=4 and r!=5:
+            arq4.write("termino:r {} p {}\n".format(r, prob))
+            arq4.write("-----------------------------------\n")
+
     return scores
 
 
 def applyTreeRecursive(tree, testData, i, tab):
-    tab += "\t"
     if tree.leaf == True:
         dice = random.random()
         cumulative = 0
@@ -374,7 +348,6 @@ def applyTreeRecursive(tree, testData, i, tab):
             if dice < cumulative:
                 value = score
                 break
-
 
         arq3.write("folha:r {} p {}\n".format(value, tree.dist[value]))
         arq3.write("-----------------------------------\n")
@@ -437,8 +410,8 @@ def applyTreeRecursive(tree, testData, i, tab):
             arq3.write(" i {}  atributo: {} user_id: {}".format(i, attribute, user_id))
             arq3.write("\n")
 
-            arq4.write("atributo: {} user_id: {}".format(attribute, user_id))
-            arq4.write("\n")
+            # arq4.write("atributo: {} user_id: {}".format(attribute, user_id))
+            # arq4.write("\n")
 
             user = findId(people, user_id, 0, len(people) - 1)
             occup = user.profession
@@ -500,15 +473,21 @@ def applyTreeRecursive(tree, testData, i, tab):
         arq3.write("retornado:r {} p {}".format(r, prob))
         arq3.write("\n")
 
+        if r == None:
+            r = 0
+
         return (r, prob)
 
 
 def applyAPriori(testData, test):
     score = []
+
+
     for i in range(len(test)):
         filme_id = test[i].movieid
         aux = findId(testData, int(filme_id), 0, len(testData)-1)
-        score.append(aux.score)
+        score.append(int(aux.score))
+
     return score
 
 def trainingAPriori(testData, ratings):
@@ -529,7 +508,7 @@ def trainingAPriori(testData, ratings):
     for i in range(len(quant)-1):
         j = findId(testData,i+1,0, len(testData)-1)
         if quant[i+1] == 0:
-            pass
+            j.score = 0
         else:
             rate = score[i+1]/quant[i+1]
             j.score = round(rate)
@@ -538,9 +517,12 @@ def trainingAPriori(testData, ratings):
 def createConfusionMatrix(testData, results):
     confMat = [[0 for i in range(5)] for j in range(5)]
     for k in range(len(results)):
-        i = results[k] - 1
-        j = testData[k].score - 1
-        confMat[i][j] += 1
+        if result[k] == 0:
+            pass
+        else:
+            i = results[k] - 1
+            j = testData[k].score - 1
+            confMat[i][j] += 1
     return confMat
 
 
@@ -674,7 +656,7 @@ if __name__ == '__main__':
     for rat in dist:
         dist[rat] /= len(ratTrain)
     decisionTree = TreeNode(vars, ratTrain, dist, None, 0)
-    tab = " "
+    tab = "|-"
     printTree(decisionTree, debug, tab)
 
     # Acurácia da árvore
@@ -687,6 +669,7 @@ if __name__ == '__main__':
     trainingAPriori(movies, ratTrain)
     # result e um vetorr com score de todos contidos no ratTest
     result = applyAPriori(movies, ratTest)
+    print("tamanho rafTest", len(ratTest), "result", len(result))
     confMatrix = createConfusionMatrix(ratTest, result)
     printMatrix(confMatrix, sys.stdout)
     acRandom = accuracy(confMatrix)
@@ -697,3 +680,6 @@ if __name__ == '__main__':
     print("Tree:     accuracy = %.3f" % acTree)
     print("A Priori: accuracy = %.3f" % acRandom)
     print("Kappa:               %.3f" % kappa)
+
+    arq3.close()
+    arq4.close()
