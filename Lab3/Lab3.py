@@ -4,7 +4,8 @@ from treelib import Node, Tree
 tree = Tree()
 cont = 0
 
-
+arq3 = open("userd.txt", "w")
+arq4 = open("userd2.txt", "w")
 # Legenda do código usado para profissões
 occupations = {
     0:  "other",
@@ -218,12 +219,13 @@ class TreeNode:
         if len(ratings) < pruningFactor*lenRat:
             self.leaf = True
             if len(ratings) == 0:
-                self.value = default
-                self.prob = 1
+                self.dist = default
             else:
-                self.value, self.prob = majorityRating(ratings)
-            # print("Too few examples left, using default: {}".format(self.value))
-            return
+                self.dist = ratingCount(ratings)
+                for rat in self.dist:
+                    self.dist[rat] /= len(ratings)
+                # print("Too few examples left, using default: {}".format(self.value))
+                return
 
         # Test: are all ratings the same?
         val = None
@@ -237,27 +239,26 @@ class TreeNode:
         if equal:
             # print("All examples equal, using value: {}".format(val))
             self.leaf = True
-            self.value = val
-            self.prob = 1
+            self.dist = {1: 0, 2:0, 3:0, 4:0, 5:0}
+            self.dist[val] = 1
             return
 
         # Test: are there no more variables?
         if len(vars) == 0:
             self.leaf = True
-            self.value, self.prob = majorityRating(ratings)
+            self.dist = ratingCount(ratings)
+            for rat in self.dist:
+                self.dist[rat] /= len(ratings)
             # print("No variables left, using majority: {}".format(self.value))
             return
 
         # Algorithm
         self.var = chooseBest(vars, ratings)
-        self.value, self.prob = majorityRating(ratings)
-        # print("Current prediction: {} with probability {}".format(self.value, self.prob))
+        self.dist = ratingCount(ratings)
+        for rat in self.dist:
+            self.dist[rat] /= len(ratings)
 
-        # Em tese, esse if não deve ser acionado, mas vai que né
-        if self.var is None:
-            # print("No gain in further fanning out, I guess.")
-            self.leaf = True
-            return
+        # print("Current prediction: {} with probability {}".format(self.value, self.prob))
 
         self.leaf = False
         examples = separateVar(ratings, self.var)
@@ -267,8 +268,7 @@ class TreeNode:
             varsi = vars.copy()
             varsi.remove(self.var)
             # print("Creating child with {} = {} --> {} examples".format(self.var.name, val, len(examplesi)))
-            self.children.append(TreeNode(varsi, examplesi.copy(), self.value, self, self.height + 1))
-
+            self.children.append(TreeNode(varsi, examplesi.copy(), self.dist, self, self.height + 1))
 
 # def printTree(root, f):
 #     cont = 1
@@ -315,7 +315,7 @@ def printTree(root, f, tab):
             curheight = node.height
         if node.father is None:
             if node.leaf:
-                f.write("{}(leaf: rat:{}, p:{}\n".format(tab,node.value, node.prob))
+                f.write("{}(leaf: rat, p:{}\n".format(tab, node.dist))
 
             else:
                 f.write("{}({}?)\n".format(tab,node.var.name))
@@ -325,7 +325,7 @@ def printTree(root, f, tab):
         else:
             branch = node.father.var.domain[node.father.children.index(node)]
             if node.leaf:
-                f.write("{}(leaf: {} = {}, rat:{} p:{:.3f})\n".format(tab,node.father.var.name, branch, node.value, node.prob))
+                f.write("{}(leaf: {} = {}, rat, p:{} )\n".format(tab,node.father.var.name, branch, node.dist))
             else:
                 f.write("{}({} = {}, {}?)\n".format(tab,node.father.var.name, branch, node.var.name))
                 # queue.extend(node.children)
@@ -346,11 +346,161 @@ def separateTrainingData(data, p):
 
 
 def applyTree(tree, testData):
-    # PLACEHOLDER
     scores = []
-    for t in testData:
-        scores.append(t.score)
+    for i in range(len(testData)):
+        # REMOVER O TAB ANTES DE ENVIAR
+
+        arq3.write("-----------------------------------\n")
+        arq3.write("i: {}\n".format(i))
+
+        tab = ' '
+        r, prob = applyTreeRecursive(tree, testData, i, tab)
+        scores.append(r)
+
+        arq3.write("termino:r {} p {}\n".format(r, prob))
+        arq3.write("-----------------------------------\n")
+
     return scores
+
+
+def applyTreeRecursive(tree, testData, i, tab):
+    tab += "\t"
+    if tree.leaf == True:
+        dice = random.random()
+        cumulative = 0
+        value = 0
+        for score in tree.dist:
+            cumulative += tree.dist[score]
+            if dice < cumulative:
+                value = score
+                break
+
+
+        arq3.write("folha:r {} p {}\n".format(value, tree.dist[value]))
+        arq3.write("-----------------------------------\n")
+
+        return (value, tree.dist[value])
+    else:
+        queue = tree.children
+        attribute = tree.var.name
+        # se o atributo for genero
+        if attribute == "genre":
+            #obtem o id do filme e apos os generos
+
+            arq3.write("atributo: {}".format(attribute))
+            arq3.write("\n")
+
+            id = testData[i].movieid
+
+            arq3.write("movie id: {}".format(id))
+            arq3.write("\n")
+
+            film = findId(movies, id, 0, len(movies) - 1)
+            g = film.genres
+
+            arq3.write("quanto generos: {}".format(len(g)))
+            arq3.write("\n")
+
+            rMax = 0
+            probMax = 0
+            # para cada classificacao de genre do filme, obter o score
+            for k in range(len(g)):
+                flag = 0
+
+                arq3.write("genero: {}".format(g[k]))
+                arq3.write("\n")
+
+                for j in range(len(queue)):
+                    node = queue[j]
+                    branch = node.father.var.domain[node.father.children.index(node)]
+                    if g[k] == branch:
+                        flag = 1
+                        break
+                if flag == 1:
+                    node = queue[j]
+
+                    arq3.write("rcursao")
+                    arq3.write("\n")
+
+                    r, prob = applyTreeRecursive(node, testData, i, tab)
+                # armazena o score que apresenta a maior probabilidade
+                if prob > probMax:
+                    probMax = prob
+                    rMax = r
+            prob = probMax
+            r = rMax
+
+        # se o atributo for occupation
+        elif attribute == "occupation":
+            user_id = testData[i].userid
+
+            arq3.write(" i {}  atributo: {} user_id: {}".format(i, attribute, user_id))
+            arq3.write("\n")
+
+            arq4.write("atributo: {} user_id: {}".format(attribute, user_id))
+            arq4.write("\n")
+
+            user = findId(people, user_id, 0, len(people) - 1)
+            occup = user.profession
+            # localizar qual o node da queue refere-se a profissao
+            node = queue[occup]
+
+            r, prob = applyTreeRecursive(node, testData, i, tab)
+
+        # se o atributo for gender
+        elif attribute == "gender":
+
+            arq3.write("atributo: {}".format(attribute))
+            arq3.write("\n")
+
+            user_id = testData[i].userid
+            user = findId(people, user_id, 0, len(people) - 1)
+            g = user.gender
+            if g == 'F':
+                node = queue[1]
+
+                arq3.write("recursao F")
+                arq3.write("\n")
+
+                r, prob = applyTreeRecursive(node, testData, i, tab)
+            elif g == 'M':
+                node = queue[0]
+
+                arq3.write("recursao M")
+                arq3.write("\n")
+
+                r, prob = applyTreeRecursive(node, testData, i, tab)
+
+        # se o atributo for age
+        elif attribute == "age":
+
+            arq3.write("atributo: {}".format(attribute))
+            arq3.write("\n")
+
+            user_id = testData[i].userid
+            user = findId(people, user_id, 0, len(people) - 1)
+            age = user.age
+
+            arq3.write("age: {}".format(age))
+            arq3.write("\n")
+
+            # localizar qual o node da queue refere-se a profissao
+            flag = 0
+            for j in range(len(queue)):
+                node = queue[j]
+                branch = node.father.var.domain[node.father.children.index(node)]
+                if age == branch:
+                    flag = 1
+                    break
+            if flag == 1:
+                node = queue[j]
+
+                r, prob = applyTreeRecursive(node, testData, i,tab)
+
+        arq3.write("retornado:r {} p {}".format(r, prob))
+        arq3.write("\n")
+
+        return (r, prob)
 
 
 def applyAPriori(testData, test):
@@ -387,7 +537,7 @@ def trainingAPriori(testData, ratings):
 
 def createConfusionMatrix(testData, results):
     confMat = [[0 for i in range(5)] for j in range(5)]
-    for k in range(len(testData)):
+    for k in range(len(results)):
         i = results[k] - 1
         j = testData[k].score - 1
         confMat[i][j] += 1
@@ -489,9 +639,11 @@ if __name__ == '__main__':
     ##################################
 
     pruningFactor = 0.001
-    # majority, prob = majorityRating(ratings)
+    # dist = ratingCount(ratings)
+    # for rat in dist:
+    #     dist[rat] /= len(ratings)
     # print("A priori: rating {} with probability {}".format(majority, prob))
-    # decisionTree = TreeNode(vars, ratings, majority, None, 0)
+    # decisionTree = TreeNode(vars, ratings, dist, None, 0)
 
     debug = open("debug.txt", "w")
     # printTree(decisionTree, debug)
@@ -506,7 +658,7 @@ if __name__ == '__main__':
 
     # ESTE TREINO PODE SER EXCLUIDO
     # treinando classificador com todos os dados
-    trainingAPriori(movies, ratings)
+    # trainingAPriori(movies, ratings)
 
     ##################################
     # 3.4 CLASSIFIER COMPARISON      #
@@ -518,9 +670,10 @@ if __name__ == '__main__':
     print("Separation time: %.3f s" % separTime)
 
     # Treinamento da árvore só com os dados de treinamento
-    majority, prob = majorityRating(ratTrain)
-    print("A priori: rating {} with probability {}".format(majority, prob))
-    decisionTree = TreeNode(vars, ratTrain, majority, None, 0)
+    dist = ratingCount(ratTrain)
+    for rat in dist:
+        dist[rat] /= len(ratTrain)
+    decisionTree = TreeNode(vars, ratTrain, dist, None, 0)
     tab = " "
     printTree(decisionTree, debug, tab)
 
@@ -538,10 +691,7 @@ if __name__ == '__main__':
     printMatrix(confMatrix, sys.stdout)
     acRandom = accuracy(confMatrix)
 
-
-
-
-    # Comparação dos classificadores
+   # Comparação dos classificadores
     kappa = (acTree - acRandom)/(1-acRandom)
     print("COMPARISON OF CLASSIFIERS")
     print("Tree:     accuracy = %.3f" % acTree)
