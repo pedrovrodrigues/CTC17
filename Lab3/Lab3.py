@@ -354,7 +354,7 @@ def applyTree(tree, testData):
         arq3.write("i: {}\n".format(i))
 
         tab = ' '
-        r, prob = applyTreeRecursive(tree, testData, i, tab)
+        r, prob = applyTreeRecursive(tree, testData[i], tab)
         scores.append(r)
 
         arq3.write("termino:r {} p {}\n".format(r, prob))
@@ -362,7 +362,7 @@ def applyTree(tree, testData):
     return scores
 
 
-def applyTreeRecursive(tree, testData, i, tab):
+def applyTreeRecursive(tree, data, tab):
     tab += "\t"
     if tree.leaf == True:
         dice = random.random()
@@ -386,15 +386,15 @@ def applyTreeRecursive(tree, testData, i, tab):
             #obtem o id do filme e apos os generos
 
             arq3.write("atributo: {}\n".format(attribute))
-            arq3.write("movie id: {}\n".format(testData[i].movieid))
-            g = testData[i].getValue(tree.var)
+            arq3.write("movie id: {}\n".format(data[i].movieid))
+            g = data[i].getValue(tree.var)
             arq3.write("quanto generos: {}".format(len(g)))
             rMax = 0
             probMax = 0
             # para cada classificacao de genre do filme, obter o score
             for k in range(len(g)):
                 node = queue[tree.var.domain.index(g[k])]
-                r, prob = applyTreeRecursive(node, testData, i, tab)
+                r, prob = applyTreeRecursive(node, data, tab)
                 # armazena o score que apresenta a maior probabilidade
                 if prob > probMax:
                     probMax = prob
@@ -402,10 +402,10 @@ def applyTreeRecursive(tree, testData, i, tab):
             prob = probMax
             r = rMax
         else:
-            arq3.write("i {}  atributo: {} user_id: {}\n".format(i, tree.var.name, testData[i].userid))
-            carac = testData[i].getValue(tree.var)
+            arq3.write("i {}  atributo: {} user_id: {}\n".format(i, tree.var.name, data[i].userid))
+            carac = data[i].getValue(tree.var)
             node = queue[tree.var.domain.index(carac)]
-            r, prob = applyTreeRecursive(node, testData, i, tab)
+            r, prob = applyTreeRecursive(node, data, tab)
 
         arq3.write("retornado: r {} p {}\n".format(r, prob))
         return (r, prob)
@@ -487,6 +487,50 @@ def weightedAccuracy(mat):
         for j in range(5):
             error += mat[i][j] * errorMat[i][j] / den
     return 1 - error
+
+
+def treeRecommend(tree, user):
+    recs = [0, 0, 0]
+    probs = [0, 0, 0]
+    for mov in movies:
+        rat = Rating(user.id, mov.id, 0, user, mov)
+        r, prob = applyTreeRecursive(tree, rat, "\t")
+        if recs[2] < r or (recs[2] == r and probs[2] < prob):
+            if recs[1] < r or (recs[1] == r and probs[1] < prob):
+                if recs[0] < r or (recs[0] == r and probs[0] < prob):
+                    recs[2] = recs[1]
+                    probs[2] = probs[1]
+                    recs[1] = recs[0]
+                    probs[1] = probs[0]
+                    recs[0] = r
+                    probs[0] = prob
+                else:
+                    recs[2] = recs[1]
+                    probs[2] = probs[1]
+                    recs[1] = r
+                    probs[1] = prob
+            else:
+                recs[2] = r
+                probs[2] = prob
+    return recs
+
+
+def aPrioriRecommend():
+    recs = [0, 0, 0]
+    for mov in movies:
+        r = mov.score
+        if recs[2] < r:
+            if recs[1] < r:
+                if recs[0] < r:
+                    recs[2] = recs[1]
+                    recs[1] = recs[0]
+                    recs[0] = r
+                else:
+                    recs[2] = recs[1]
+                    recs[1] = r
+            else:
+                recs[2] = r
+    return recs
 
 
 
@@ -573,15 +617,11 @@ if __name__ == '__main__':
     # decisionTree = TreeNode(vars, ratings, dist, None, 0)
 
     debug = open("debug.txt", "w")
-    # printTree(decisionTree, debug)
-    # tab = " "
-    # printTree(decisionTree, debug, tab)
-
 
     ##################################
     # 3.3 RANDOM CLASSIFIER          #
     ##################################
-    print("Classificador a priori")
+    # print("Classificador a priori")
 
     # ESTE TREINO PODE SER EXCLUIDO
     # treinando classificador com todos os dados
@@ -636,3 +676,33 @@ if __name__ == '__main__':
     print(" weighted accuracy = %.3f" % wAcRandom)
     print("Kappa:               %.3f" % kappa)
     print("Weighted kappa:      %.3f" % wkappa)
+
+    # RECOMENDAÇÃO DE FILMES
+    print("Iniciando recomendações...")
+    print("Digite sua profissão segundo a legenda:")
+    for oc in occupations:
+        print("{}: {}".format(oc, occupations[oc]))
+    prof = int(input("> "))
+    print("Digite sua idade segundo a legenda")
+    for i in range(len(varage.domain)):
+        if i < len(varage.domain) - 1:
+            print("{0}-{1}: {0}".format(varage.domain[i], varage.domain[i+1]))
+        else:
+            print("{0}+:    {0}".format(varage.domain[i]))
+    idade = int(input("> "))
+    gen = ""
+    while gen != "M" and gen != "F":
+        print("Digite seu gênero (M/F)")
+        gen = str(input("> "))
+    user = Person(ratings[-1].userid + 1, gen, idade, prof)
+    treeRecs = treeRecommend(decisionTree, user)
+    print("Tree generated recommendations:")
+    print("\t1. {}".format(treeRecs[0].name))
+    print("\t2. {}".format(treeRecs[1].name))
+    print("\t3. {}".format(treeRecs[2].name))
+
+    prioriRecs = aPrioriRecommend()
+    print("A priori generated recommendations:")
+    print("\t1. {}".format(prioriRecs[0].name))
+    print("\t2. {}".format(prioriRecs[1].name))
+    print("\t3. {}".format(prioriRecs[2].name))
