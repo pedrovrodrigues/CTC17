@@ -23,6 +23,11 @@ damping = 0.9
 debug = open("debug.txt", "w",encoding="utf-8")
 
 def printMatrix(mat, f):
+    """
+    Imprime a matriz desejada em um arquivo txt previamente declarado
+    :param mat: matriz que deseja imprimir
+           f : arquivo onde sera impresso a matri
+    """
     for i in range(len(mat[0]) + 1):
         f.write("|%4d" % i)
     f.write("\n")
@@ -34,6 +39,11 @@ def printMatrix(mat, f):
     f.write("\n")
 
 def copyMatrix(mat):
+    """
+    Copia uma matriz passada por parametro em uma variável
+    :param mat: matriz que deseja copiar
+    :return copy: matriz copiada
+    """
     copy = []
     for i in range(len(mat)):
         copy.append(mat[i].copy())
@@ -60,9 +70,18 @@ class Policy:
         self.util = 0
 
     def decision(self, xy):
-        return self.actions[xy.y][xy.x]
+        '''
+        Retorna a acao a ser tomada pelo robo de acordo com a sua posicao no tabuleiro
+        :param xy: objeto contendo a posicao do robot no tabuleiro
+        :return: a direcao otima a ser percorrida
+        '''
+        return self.actions[xy.x][xy.y]
 
     def valueIteration(self):
+        '''
+
+        :return:
+        '''
         newSC = None
         while newSC is None or newSC != self.stateCost:
             if newSC is not None:
@@ -109,7 +128,7 @@ class Policy:
                                 else:
                                     summing -= p[1]*-0.1
                                     summing += p[1]*self.stateCost[i][j+1]
-                        print("stateCost[{}][{}] = {}".format(i,j,summing))
+                        #print("stateCost[{}][{}] = {}".format(i,j,summing))
                         if maxV is None:
                             maxV = summing
                         else:
@@ -201,6 +220,7 @@ class Robot:
             self.xy = XY(0,0)
             self.retries = -1
             self.restart(world)
+            self.moves = 0
         else:
             self.xy = xy
             self.retries = 0
@@ -209,25 +229,44 @@ class Robot:
     def restart(self, world):
         tile = ""
         while tile != " ":
-            self.xy.x = random.randint(0,len(world))
-            self.xy.y = random.randint(0,len(world[0]))
-            tile = self.world[self.xy.y][self.xy.x]
+            self.xy.x = random.randint(0,len(world)-1)
+            self.xy.y = random.randint(0,len(world[0])-1)
+            tile = self.world[self.xy.x][self.xy.y]
+
         self.retries += 1
 
     def resolveState(self):
-        if self.world[self.xy.y][self.xy.x] == "W":
+        # Se a posicao do Robot coincidir com a de um Wumpus
+        # Subtrair 100 da variavel util
+        if self.world[self.xy.x][self.xy.y] == "W":
             self.util -= 100
             self.restart(self.world)
-        elif world[self.xy.y][self.xy.x] == "P":
+            print("wumpus")
+            print("restart, mais um movimento")
+
+        # Se a posicao do Robot coincidir com a de um PIT
+        # Subtrair 50 da variavel util
+        elif self.world[self.xy.x][self.xy.y] == "P":
             self.util -= 50
             self.restart(self.world)
-        elif world[self.xy.y][self.xy.x] == "G":
+            print("pit")
+            print("restart, mais um movimento")
+
+
+        # Se a posicao do Robot coincidir com a de um GOLD
+        # Somar 100 da variavel util
+        elif self.world[self.xy.x][self.xy.y] == "G":
             self.util += 100
             self.restart(self.world)
+            print("gold")
+            print("restart, mais um movimento")
+
 
     def move(self, pol):
         # Política retorna uma lista de direções sugeridas
         choices = pol.decision(self.xy)
+        print("direcao", choices, len(choices))
+
         # Escolher aleatoriamente a direção
         if len(choices) == 1:
             dir = choices[0]
@@ -237,38 +276,45 @@ class Robot:
         error = random.random()
         if error < 0.2:
             dir = directions[(directions.index(dir) + 3) % 4]
+            print("deslizou para esquerda", dir)
         elif error > 0.9:
             dir = directions[(directions.index(dir) + 1) % 4]
-        # Para a direção, bate na parede ou anda um espaço
+            print("deslizou para direita", dir)
+
+
         if dir == "U":
-            if self.xy.y == 0:
-                self.util -= 1
-            else:
-                self.util -= 0.1
-                self.xy.y -= 1
-                self.resolveState()
-        elif dir == "D":
-            if self.xy.y == len(self.world) - 1:
-                self.util -= 1
-            else:
-                self.util -= 0.1
-                self.xy.y += 1
-                self.resolveState()
-        elif dir == "L":
             if self.xy.x == 0:
                 self.util -= 1
             else:
                 self.util -= 0.1
                 self.xy.x -= 1
+                print("x ",self.xy.x + 1)
                 self.resolveState()
-        elif dir == "R":
-            if self.xy.x == len(self.world[0]) - 1:
+        elif dir == "D":
+            if self.xy.x == len(self.world) - 1:
                 self.util -= 1
             else:
                 self.util -= 0.1
                 self.xy.x += 1
+                print("x ",self.xy.x + 1)
+                self.resolveState()
+        elif dir == "L":
+            if self.xy.y == 0:
+                self.util -= 1
+            else:
+                self.util -= 0.1
+                self.xy.y -= 1
+                print("y ",self.xy.y + 1)
                 self.resolveState()
 
+        elif dir == "R":
+            if self.xy.y == len(self.world[0]) - 1:
+                self.util -= 1
+            else:
+                self.util -= 0.1
+                self.xy.y += 1
+                print("y ",self.xy.y + 1)
+                self.resolveState()
 
 
 if __name__ == '__main__':
@@ -279,3 +325,15 @@ if __name__ == '__main__':
     pol = Policy(wumpusWorld)
     pol.valueIteration()
     printMatrix(pol.stateCost, debug)
+
+    simula = Robot(wumpusWorld)
+
+
+    while (simula.moves < infinity):
+        print("move: ", simula.moves)
+        print("posicao antes", simula.xy.x + 1, simula.xy.y + 1)
+        simula.move(pol)
+        simula.moves += 1
+        print("posicao", simula.xy.x + 1, simula.xy.y + 1)
+        print("util: ", simula.util)
+        print("-----------------------------------------")
