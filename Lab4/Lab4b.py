@@ -220,12 +220,11 @@ class Robot:
         self.gold = 0
         self.wumpuns = 0
         self.pit = 0
-        self.moves = 0
         if xy is None or world[xy.y][xy.x] != " ":
             self.xy = XY(0,0)
             self.retries = -1
             self.restart(world)
-
+            self.moves = 0
         else:
             self.xy = xy
             self.retries = 0
@@ -248,36 +247,36 @@ class Robot:
         # Se a posicao do Robot coincidir com a de um Wumpus
         # Subtrair 100 da variavel util
         if self.world[self.xy.x][self.xy.y] == "W":
-            self.util = self.util*(0.9**self.moves) - 100
+            self.util = self.util*0.9 - 100
             self.restart(self.world)
             self.wumpuns +=1
-            # print("wumpus")
-            # print("restart, mais um movimento")
+            print("wumpus")
+            print("restart, mais um movimento")
 
         # Se a posicao do Robot coincidir com a de um PIT
         # Subtrair 50 da variavel util
         elif self.world[self.xy.x][self.xy.y] == "P":
-            self.util = self.util*(0.9**self.moves) -50
+            self.util -= 50
             self.restart(self.world)
             self.pit += 1
-            # print("pit")
-            # print("restart, mais um movimento")
+            print("pit")
+            print("restart, mais um movimento")
 
 
         # Se a posicao do Robot coincidir com a de um GOLD
         # Somar 100 da variavel util
         elif self.world[self.xy.x][self.xy.y] == "G":
-            self.util = self.util * (0.9**self.moves) + 100
+            self.util += 100
             self.restart(self.world)
             self.gold += 1
-            # print("gold")
-            # print("restart, mais um movimento")
+            print("gold")
+            print("restart, mais um movimento")
 
 
     def move(self, pol):
         # Política retorna uma lista de direções sugeridas
         choices = pol.decision(self.xy)
-        # print("direcao", choices, len(choices))
+        print("direcao", choices, len(choices))
 
         # Escolher aleatoriamente a direção
         if len(choices) == 1:
@@ -288,81 +287,46 @@ class Robot:
         error = random.random()
         if error < 0.2:
             dir = directions[(directions.index(dir) + 3) % 4]
-            # print("deslizou para esquerda", dir)
+            print("deslizou para esquerda", dir)
         elif error > 0.9:
             dir = directions[(directions.index(dir) + 1) % 4]
-            # print("deslizou para direita", dir)
+            print("deslizou para direita", dir)
 
 
         if dir == "U":
             if self.xy.x == 0:
-                self.util = self.util*(0.9**self.moves) - 1
+                self.util -= 1
             else:
-                self.util = self.util * (0.9**self.moves) - 0.1
+                self.util -= 0.1
                 self.xy.x -= 1
-                # print("x ",self.xy.x + 1)
+                print("x ",self.xy.x + 1)
                 self.resolveState()
         elif dir == "D":
             if self.xy.x == len(self.world) - 1:
-                self.util = self.util * (0.9**self.moves) - 1
+                self.util -= 1
             else:
-                self.util = self.util * (0.9**self.moves) - 0.1
+                self.util -= 0.1
                 self.xy.x += 1
-                # print("x ",self.xy.x + 1)
+                print("x ",self.xy.x + 1)
                 self.resolveState()
         elif dir == "L":
             if self.xy.y == 0:
-                self.util = self.util*(0.9**self.moves) - 1
+                self.util -= 1
             else:
-                self.util = self.util*(0.9**self.moves) - 0.1
+                self.util -= 0.1
                 self.xy.y -= 1
-                # print("y ",self.xy.y + 1)
+                print("y ",self.xy.y + 1)
                 self.resolveState()
 
         elif dir == "R":
             if self.xy.y == len(self.world[0]) - 1:
-                self.util = self.util*(0.9**self.moves) - 1
+                self.util -= 1
             else:
-                self.util = self.util * (0.9**self.moves) - 0.1
+                self.util -= 0.1
                 self.xy.y += 1
-                # print("y ",self.xy.y + 1)
+                print("y ",self.xy.y + 1)
                 self.resolveState()
 
-    def randomMove(self, pol):
-        dir = directions[random.randint(0,3)]
-        if dir == "U":
-            if self.xy.x == 0:
-                self.util = self.util * (0.9 ** self.moves) - 1
-            else:
-                self.util = self.util * (0.9 ** self.moves) - 0.1
-                self.xy.x -= 1
-                # print("x ",self.xy.x + 1)
-                self.resolveState()
-        elif dir == "D":
-            if self.xy.x == len(self.world) - 1:
-                self.util = self.util * (0.9 ** self.moves) - 1
-            else:
-                self.util = self.util * (0.9 ** self.moves) - 0.1
-                self.xy.x += 1
-                # print("x ",self.xy.x + 1)
-                self.resolveState()
-        elif dir == "L":
-            if self.xy.y == 0:
-                self.util = self.util * (0.9 ** self.moves) - 1
-            else:
-                self.util = self.util * (0.9 ** self.moves) - 0.1
-                self.xy.y -= 1
-                # print("y ",self.xy.y + 1)
-                self.resolveState()
-
-        elif dir == "R":
-            if self.xy.y == len(self.world[0]) - 1:
-                self.util = self.util * (0.9 ** self.moves) - 1
-            else:
-                self.util = self.util * (0.9 ** self.moves) - 0.1
-                self.xy.y += 1
-                # print("y ",self.xy.y + 1)
-                self.resolveState()
 
 if __name__ == '__main__':
     wumpusWorld =  [[" ","P"," "," "," "," ","P"," "],
@@ -375,42 +339,16 @@ if __name__ == '__main__':
 
     simula = Robot(wumpusWorld)
 
-    # Simulacao utiliando politica otima
-    qtdloop = 0
-    sumPolicy = 0
-    sumRandom = 0
-    while (qtdloop < infinity):
-        simula.util = 0
-        simula.moves = 0
-        while (simula.moves < infinity):
-            simula.move(pol)
-            simula.moves += 1
-        sumPolicy += simula.util
-        qtdloop += 1
 
-    print("-----------------------------------------")
-    print("util - Policy: ", sumPolicy/qtdloop)
-    print("gold: ", simula.gold, " | pit: ", simula.pit, " | wumpus: ", simula.wumpuns)
+    while (simula.moves < infinity):
+        print("move: ", simula.moves)
+        print("posicao antes", simula.xy.x + 1, simula.xy.y + 1)
+        simula.move(pol)
+        simula.moves += 1
+        print("posicao", simula.xy.x + 1, simula.xy.y + 1)
+        print("util: ", simula.util)
+        print("-----------------------------------------")
 
-    # Simulacao utiliando movimentos aleatorios
-    qtdloop = 0
-    while (qtdloop < infinity):
-        simula.util = 0
-        simula.moves = 0
-        simula.gold = 0
-        simula.pit = 0
-        simula.wumpuns = 0
-        while (simula.moves < infinity):
-            # print("move: ", simula.moves)
-            # print("posicao antes", simula.xy.x + 1, simula.xy.y + 1)
-            simula.randomMove(pol)
-            simula.moves += 1
-            # print("posicao", simula.xy.x + 1, simula.xy.y + 1)
-            # print("util: ", simula.util)
-        sumRandom += simula.util
-        qtdloop += 1
-
-    print("-----------------------------------------")
-    print("util - Random: ", sumRandom/qtdloop)
-    # print("restart: ", simula.qtdRestart)
+    print("util: ", simula.util)
+    print("restart: ", simula.qtdRestart)
     print("gold: ", simula.gold, " | pit: ", simula.pit, " | wumpuns: ", simula.wumpuns)
