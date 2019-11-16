@@ -48,7 +48,7 @@ class XY:
 class Policy:
     def __init__(self, world):
         self.world = world
-        self.stateCost = copyMatrix(world)
+        self.stateUtil = copyMatrix(world)
         self.actions = copyMatrix(world)
         for i in range(len(world)):
             for j in range(len(world[i])):
@@ -56,22 +56,21 @@ class Policy:
                     self.actions[i][j] = directions.copy()
                 else:
                     self.actions[i][j] = []
-                self.stateCost[i][j] = 0
-        self.util = 0
+                self.stateUtil[i][j] = 0
 
     def decision(self, xy):
         return self.actions[xy.y][xy.x]
 
     def valueIteration(self):
         newSC = None
-        while newSC is None or newSC != self.stateCost:
+        while newSC is None or newSC != self.stateUtil:
             if newSC is not None:
-                self.stateCost = copyMatrix(newSC)
+                self.stateUtil = copyMatrix(newSC)
             else:
-                newSC = copyMatrix(self.stateCost)
+                newSC = copyMatrix(self.stateUtil)
 
-            for i in range(len(self.stateCost)):
-                for j in range(len(self.stateCost[i])):
+            for i in range(len(self.stateUtil)):
+                for j in range(len(self.stateUtil[i])):
                     newSC[i][j] = self.utilTile(i,j)
                     maxV = 0
                     for a in self.actions[i][j]:
@@ -84,32 +83,32 @@ class Policy:
                             if p[0] == "U":
                                 if i == 0:
                                     summing -= p[1]*-1
-                                    summing += p[1]*self.stateCost[i][j]
+                                    summing += p[1]*self.stateUtil[i][j]
                                 else:
                                     summing -= p[1]*-0.1
-                                    summing += p[1]*self.stateCost[i-1][j]
+                                    summing += p[1]*self.stateUtil[i-1][j]
                             elif p[0] == "D":
                                 if i == len(self.world) - 1:
                                     summing -= p[1]*-1
-                                    summing += p[1]*self.stateCost[i][j]
+                                    summing += p[1]*self.stateUtil[i][j]
                                 else:
                                     summing -= p[1]*-0.1
-                                    summing += p[1]*self.stateCost[i+1][j]
+                                    summing += p[1]*self.stateUtil[i+1][j]
                             elif p[0] == "L":
                                 if j == 0:
                                     summing -= p[1]*-1
-                                    summing += p[1]*self.stateCost[i][j]
+                                    summing += p[1]*self.stateUtil[i][j]
                                 else:
                                     summing -= p[1]*-0.1
-                                    summing += p[1]*self.stateCost[i][j-1]
+                                    summing += p[1]*self.stateUtil[i][j-1]
                             elif p[0] == "R":
                                 if j == len(self.world[0]) - 1:
                                     summing -= p[1]*-1
-                                    summing += p[1]*self.stateCost[i][j]
+                                    summing += p[1]*self.stateUtil[i][j]
                                 else:
                                     summing -= p[1]*-0.1
-                                    summing += p[1]*self.stateCost[i][j+1]
-                        print("stateCost[{}][{}] = {}".format(i,j,summing))
+                                    summing += p[1]*self.stateUtil[i][j+1]
+                        print("stateUtil[{}][{}] = {}".format(i,j,summing))
                         if maxV is None:
                             maxV = summing
                         else:
@@ -118,7 +117,6 @@ class Policy:
                     newSC[i][j] = round(newSC[i][j],3)
         self.defineActions()
         self.print(debug)
-
 
     def defineActions(self):
         for i in range(len(self.world)):
@@ -129,38 +127,36 @@ class Policy:
                 possTiles = []
                 # tile up
                 if i > 0:
-                    possTiles.append(self.stateCost[i-1][j])
+                    possTiles.append(self.stateUtil[i-1][j])
                 else:
-                    possTiles.append(self.stateCost[i][j])
+                    possTiles.append(self.stateUtil[i][j])
                 # tile right
                 if j < len(self.world[i]) - 1:
-                    possTiles.append(self.stateCost[i][j+1])
+                    possTiles.append(self.stateUtil[i][j+1])
                 else:
-                    possTiles.append(self.stateCost[i][j])
+                    possTiles.append(self.stateUtil[i][j])
                 # tile down
                 if i < len(self.world) - 1:
-                    possTiles.append(self.stateCost[i+1][j])
+                    possTiles.append(self.stateUtil[i+1][j])
                 else:
-                    possTiles.append(self.stateCost[i][j])
+                    possTiles.append(self.stateUtil[i][j])
                 # tile left
                 if j > 0:
-                    possTiles.append(self.stateCost[i][j-1])
+                    possTiles.append(self.stateUtil[i][j-1])
                 else:
-                    possTiles.append(self.stateCost[i][j])
+                    possTiles.append(self.stateUtil[i][j])
                 self.actions[i][j] = []
                 maxUtil = max(possTiles)
                 for k in range(len(possTiles)):
                     if possTiles[k] == maxUtil:
                         self.actions[i][j].append(directions[k])
 
-
     def restartUtil(self):
         avg = 0
         for i in range(len(self.world)):
             for j in range(len(self.world[i])):
-                avg += self.stateCost[i][j]
+                avg += self.stateUtil[i][j]
         return damping*avg/(len(self.world)*len(self.world[0]))
-
 
     def utilTile(self,i,j):
         if self.world[i][j] == "G":
@@ -278,4 +274,4 @@ if __name__ == '__main__':
                     [" "," ","P"," "," "," ","P"," "]]
     pol = Policy(wumpusWorld)
     pol.valueIteration()
-    printMatrix(pol.stateCost, debug)
+    printMatrix(pol.stateUtil, debug)
