@@ -58,12 +58,26 @@ class Genome:
 
 
 class DifferentialEvolution:
-    def __init__(self, ngens, F, CR, fname):
+    def __init__(self, ngens, F, CR, fname, mode, perts, CRmode, lamb = 0.5):
         self.gens = [Genome(fname) for i in range(ngens)]
         self.F = F
         self.CR = CR
+        self.mode = mode
+        self.perts = perts
+        self.CRmode = CRmode
+        self.lamb = lamb
+
+    def findBest(self):
+        bestg = None
+        bestval = None
+        for g in self.gens:
+            if bestval is None or bestval > g.val:
+                bestg = g
+                bestval = g.val
+        return bestg
 
     def update(self):
+        best = self.findBest()
         for g in self.gens:
             r1 = random.randint(0,len(self.gens)-1)
             xr1 = self.gens[r1].x
@@ -75,17 +89,44 @@ class DifferentialEvolution:
             while r3 == r1 or r3 == r2:
                 r3 = random.randint(0,len(self.gens)-1)
             xr3 = self.gens[r3].x
+            r4 = r1
+            while r4 == r1 or r4 == r2 or r4 == r3:
+                r4 = random.randint(0, len(self.gens) - 1)
+            xr4 = self.gens[r4].x
+            r5 = r1
+            while r5 == r1 or r5 == r2 or r5 == r3 or r5 == r4:
+                r5 = random.randint(0,len(self.gens)-1)
+            xr5 = self.gens[r5].x
+
             for d in range(dim):
-                g.v[d] = xr1[d] + self.F*(xr2[d] - xr3[d])
+                if self.mode == "rand" and self.perts == 1:
+                    g.v[d] = xr1[d] + self.F*(xr2[d] - xr3[d])
+                elif self.mode == "rand" and self.perts == 2:
+                    g.v[d] = xr1[d] + self.F*(xr2[d] - xr3[d]) + self.F*(xr4[d] - xr5[d])
+                elif self.mode == "best" and self.perts == 1:
+                    g.v[d] = best.x[d] + self.F*(xr2[d] - xr3[d])
+                elif self.mode == "best" and self.perts == 2:
+                    g.v[d] = best.x[d] + self.F*(xr2[d] - xr3[d]) + self.F*(xr4[d] - xr5[d])
+                elif self.mode == "randtobest":
+                    g.v[d] = g.x[d] + self.F*(xr1[d] - xr2[d]) + self.lamb*(best.x[d] - g.x[d])
+
                 if g.v[d] > lims[1]:
                     g.v[d] = lims[1]
                 if g.v[d] < lims[0]:
                     g.v[d] = lims[0]
-                dice = random.random()
-                if dice < self.CR:
-                    g.u[d] = g.v[d]
-                else:
-                    g.u[d] = g.x[d]
+
+                if self.CRmode == "bin":
+                    dice = random.random()
+                    g.u[d] = g.v[d] if dice < self.CR else g.x[d]
+
+            if self.CRmode == "exp":
+                n = int(math.floor(dim*random.random()))
+                L = int(math.floor(dim * random.random() + 1))
+                g.u = g.x.copy()
+                for i in range(L):
+                    g.u[(n+i)%dim] = g.v[(n+i)%dim]
+
+
             print("\tParticle {}: x = {} u = {}".format(self.gens.index(g),g.x, g.u))
             uval = function(g.fname, g.u)
             print("\t             f(x) = {} f(u) = {}".format(g.val, uval))
@@ -102,7 +143,7 @@ class DifferentialEvolution:
             tries += 1
         print("End of otimization!")
         est = self.estimate()
-        print("Found minimum: {}, value = {}".format(est[0], est[1]))
+        print("Found minimum: {}, value = {} in {} tries".format(est[0], est[1], tries))
         return est
 
     def checkConv(self):
@@ -133,5 +174,5 @@ if __name__ == '__main__':
     dim = 2
     lims = [-10,10]
     convRad = 0.01
-    DE = DifferentialEvolution(15, 0.7, 0.75, "Sphere")
+    DE = DifferentialEvolution(15, 0.7, 0.75, "Sphere", "randtobest", 1, "exp")
     DE.optimization()
