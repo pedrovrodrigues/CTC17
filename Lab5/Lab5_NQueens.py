@@ -1,5 +1,20 @@
-import math, random
-implementedFunctions = ["Sphere","Rosenbrock","Rastrigin","Griewank","Ackley","Queens"]
+import time, math, random, sys
+
+def printMatrix(config, f):
+    # Função para imprimir a matriz config no arquivo f
+    for i in range(dim + 1):
+        f.write("|%3d" % i)
+    f.write("|\n")
+    for i in range(dim):
+        f.write("|%3d" % i)
+        for j in range(dim):
+            if i == round(config[j]):
+                f.write("| * ")
+            else:
+                f.write("|   ")
+        f.write("|\n")
+    f.write("\n")
+
 
 def function(name, input):
     output = 0
@@ -38,19 +53,116 @@ def function(name, input):
         for i in range(len(input)):
             for j in range(len(input)):
                 if i != j:
-                    if input[i] == input[j]:
+                    if round(input[i]) == round(input[j]):
                         output += 1
-                    elif abs(input[i] - input[j]) == abs(i - j):
+                    elif abs(round(input[i]) - round(input[j])) == abs(i - j):
                         output += 1
         return output/2
     return 0
 
-def rand():
-    return lims[0] + (lims[1] - lims[0])*random.random()
+
+def generateStart():
+    config = []
+    for i in range(dim):
+        pos = random.randint(0, dim - 1)
+        while pos in config:
+            pos = random.randint(0, dim - 1)
+        config.append(pos)
+    return config
+
+
+class Particle:
+    def __init__(self, fname):
+        self.x = generateStart()
+        self.val = function(fname, self.x)
+        self.v = [0 for i in range(dim)]
+        self.p = self.x
+        self.pval = function(fname, self.p)
+        self.g = self.x
+        self.gval = function(fname, self.g)
+
+
+class Swarm:
+    def __init__(self, w=0.1,selfc=2.5,swarmc=2.5,npart=60, fname="Queens"):
+        self.w = w
+        self.selfc = selfc
+        self.swarmc = swarmc
+        phi = selfc + swarmc
+        self.constrict = 2/abs(4-phi-math.sqrt(phi*phi-4*phi))
+        self.parts = [Particle(fname) for i in range(npart)]
+        self.fname = fname
+
+    def update(self):
+        print("\tUpdating p and g")
+        for p in self.parts:
+            if p.val < p.pval:
+                p.p = p.x.copy()
+                p.pval = p.val
+                print("\t\tNew p for particle {}".format(self.parts.index(p)))
+                print("\t\tposition: {}, value {}".format(p.p, p.pval))
+            if p.val < p.gval:
+                print("\t\tNew g! Particle {}".format(self.parts.index(p)))
+                print("\t\tposition: {}, value {}".format(p.x, p.val))
+                for pp in self.parts:
+                    pp.g = p.x.copy()
+                    pp.gval = p.val
+
+        phi1 = random.random()
+        phi2 = random.random()
+        print("\tUpdating velocity and position, phi1 = {}, phi2 = {}".format(phi1,phi2))
+        for p in self.parts:
+            for d in range(dim):
+                newVid = self.w * p.v[d]
+                newVid += self.selfc * phi1 * (p.p[d] - p.x[d])
+                newVid += self.swarmc * phi2 * (p.g[d] - p.x[d])
+                newVid = self.constrict*newVid
+                p.v[d] = newVid
+                p.x[d] = int(p.x[d]+newVid)
+                if p.x[d] > lims[1]:
+                    p.x[d] = lims[1]
+                if p.x[d] < lims[0]:
+                    p.x[d] = lims[0]
+            p.val = function(self.fname, p.x)
+            print("\t\tParticle {}: x {}, value {}".format(self.parts.index(p), p.x, p.val))
+
+    def checkConv(self):
+        centroid = [0 for i in range(dim)]
+        for p in self.parts:
+            for d in range(dim):
+                centroid[d] += p.x[d]/len(self.parts)
+        allIn = True
+        print("\tCentroid: {}".format(centroid))
+        for p in self.parts:
+            distance = 0
+            for d in range(dim):
+                distance += (p.x[d]-centroid[d])*(p.x[d]-centroid[d])
+            distance = math.sqrt(distance)
+            if distance > convRad:
+                allIn = False
+        return allIn
+
+    def estimate(self):
+        centroid = [0 for i in range(dim)]
+        for p in self.parts:
+            for d in range(dim):
+                centroid[d] += p.x[d]/len(self.parts)
+        return centroid, function(self.fname, centroid)
+
+    def optimization(self):
+        tries = 1
+        while not self.checkConv():
+            print("Iteration {}:".format(tries))
+            self.update()
+            tries += 1
+        print("End of otimization!")
+        est = self.estimate()
+        print("Found minimum: {}, value = {}".format(est[0], est[1]))
+        return est
+
 
 class Genome:
     def __init__(self, fname):
-        self.x = [rand() for i in range(dim)]
+        self.x = generateStart()
         self.v = [0 for i in range(dim)]
         self.u = [0 for i in range(dim)]
         self.val = function(fname, self.x)
@@ -110,6 +222,8 @@ class DifferentialEvolution:
                 elif self.mode == "randtobest":
                     g.v[d] = g.x[d] + self.F*(xr1[d] - xr2[d]) + self.lamb*(best.x[d] - g.x[d])
 
+                g.v[d] = round(g.v[d])
+
                 if g.v[d] > lims[1]:
                     g.v[d] = lims[1]
                 if g.v[d] < lims[0]:
@@ -142,16 +256,19 @@ class DifferentialEvolution:
             print("Iteration {}:".format(tries))
             self.update()
             tries += 1
+            best = self.findBest()
+            if best.val == 0:
+                print("End of otimization!")
+                print("Found minimum: {}, value = {} in {} tries".format(best.x, best.val, tries))
+                return best.x, best.val
+
         print("End of otimization!")
         est = self.estimate()
         print("Found minimum: {}, value = {} in {} tries".format(est[0], est[1], tries))
         return est
 
     def checkConv(self):
-        centroid = [0 for i in range(dim)]
-        for p in self.gens:
-            for d in range(dim):
-                centroid[d] += p.x[d]/len(self.gens)
+        centroid = self.centroid()
         allIn = True
         print("\tCentroid: {}".format(centroid))
         for p in self.gens:
@@ -164,16 +281,28 @@ class DifferentialEvolution:
         return allIn
 
     def estimate(self):
+        centroid = self.centroid()
+        return centroid, function(self.gens[0].fname, centroid)
+
+    def centroid(self):
         centroid = [0 for i in range(dim)]
         for p in self.gens:
             for d in range(dim):
                 centroid[d] += p.x[d]/len(self.gens)
-        return centroid, function(self.gens[0].fname, centroid)
+        for d in range(dim):
+            centroid[d] = int(centroid[d])
+        return centroid
 
 
 if __name__ == '__main__':
-    dim = 2
-    lims = [-10,10]
+    dim = 8
+    lims = [1,8]
     convRad = 0.01
-    DE = DifferentialEvolution(15, 0.7, 0.75, "Sphere", "randtobest", 1, "exp")
-    DE.optimization()
+    PSOSwarm = Swarm(w=0.1,selfc=2.5,swarmc=2.5,npart=60,fname="Queens")
+    PSOconfig, PSOattacks = PSOSwarm.optimization()
+    DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 1, "exp")
+    DE config, DEattacks = DE.optimization()
+    print("PSO Solution ({} attacks remaining):".format(PSOattacks))
+    printMatrix(PSOconfig, sys.stdout)
+    print("DE Solution ({} attacks remaining):".format(DEattacks))
+    printMatrix(DEconfig, sys.stdout)

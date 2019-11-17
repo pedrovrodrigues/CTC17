@@ -60,7 +60,7 @@ class Particle:
         self.gval = function(fname, self.g)
 
 class Swarm:
-    def __init__(self, w, selfc, swarmc, npart, fname):
+    def __init__(self, w=0.1, selfc=2.5, swarmc=2.5, npart=60, fname="Sphere"):
         self.w = w
         self.selfc = selfc
         self.swarmc = swarmc
