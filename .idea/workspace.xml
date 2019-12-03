@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8d4eebe4-b621-43e8-92a4-8ae7f6e4d622" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lab1/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab1/quero.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab1/quero.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,11 +29,8 @@
       <file leaf-file-name="Lab5_NQueens.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Lab5/Lab5_NQueens.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="312" column="45" selection-start-line="312" selection-start-column="45" selection-end-line="312" selection-end-column="45" />
-              <folding>
-                <element signature="e#4697#4903#0" />
-              </folding>
+            <state relative-caret-position="204">
+              <caret line="29" column="27" lean-forward="true" selection-start-line="29" selection-start-column="27" selection-end-line="29" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -43,8 +38,8 @@
       <file leaf-file-name="PSO.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Lab5/PSO.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="137" lean-forward="true" selection-start-line="137" selection-end-line="137" />
+            <state relative-caret-position="119">
+              <caret line="58" column="23" lean-forward="true" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -88,9 +83,9 @@
         <option value="$PROJECT_DIR$/Lab3/Lab3.py" />
         <option value="$PROJECT_DIR$/Lab4/Lab4.py" />
         <option value="$PROJECT_DIR$/Lab5/DE.py" />
-        <option value="$PROJECT_DIR$/Lab5/PSO.py" />
         <option value="$PROJECT_DIR$/Lab5/VPSO.py" />
         <option value="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" />
+        <option value="$PROJECT_DIR$/Lab5/PSO.py" />
       </list>
     </option>
   </component>
@@ -147,7 +142,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Lab5_NQueens">
+  <component name="RunManager" selected="Python.PSO">
     <configuration name="DE" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CTC17" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -247,10 +242,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.PSO" />
         <item itemvalue="Python.Lab5_NQueens" />
         <item itemvalue="Python.VPSO" />
         <item itemvalue="Python.DE" />
-        <item itemvalue="Python.PSO" />
         <item itemvalue="Python.Lab3" />
       </list>
     </recent_temporary>
@@ -365,7 +360,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575398162760</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Lab5: DE/PSO">
+      <created>1575398964282</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1575398964282</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -431,7 +433,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -748,13 +750,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Lab5/PSO.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="137" lean-forward="true" selection-start-line="137" selection-end-line="137" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -762,13 +757,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Lab5/PSO.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="58" column="23" lean-forward="true" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Lab5/Lab5_NQueens.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="312" column="45" selection-start-line="312" selection-start-column="45" selection-end-line="312" selection-end-column="45" />
-          <folding>
-            <element signature="e#4697#4903#0" />
-          </folding>
+        <state relative-caret-position="204">
+          <caret line="29" column="27" lean-forward="true" selection-start-line="29" selection-start-column="27" selection-end-line="29" selection-end-column="27" />
         </state>
       </provider>
     </entry>

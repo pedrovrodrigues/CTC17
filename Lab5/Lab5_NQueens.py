@@ -18,7 +18,7 @@ def printMatrix(config, f):
 
 def function(name, input):
     output = 0
-    if name ==  "Sphere":
+    if name == "Sphere":
         for x in input:
             output += x*x
         return output
@@ -93,23 +93,27 @@ class Swarm:
         self.fname = fname
 
     def update(self):
-        print("\tUpdating p and g")
+        if info == 1:
+            print("\tUpdating p and g")
         for p in self.parts:
             if p.val < p.pval:
                 p.p = p.x.copy()
                 p.pval = p.val
-                print("\t\tNew p for particle {}".format(self.parts.index(p)))
-                print("\t\tposition: {}, value {}".format(p.p, p.pval))
+                if info == 1:
+                    print("\t\tNew p for particle {}".format(self.parts.index(p)))
+                    print("\t\tposition: {}, value {}".format(p.p, p.pval))
             if p.val < p.gval:
-                print("\t\tNew g! Particle {}".format(self.parts.index(p)))
-                print("\t\tposition: {}, value {}".format(p.x, p.val))
+                if info == 1:
+                    print("\t\tNew g! Particle {}".format(self.parts.index(p)))
+                    print("\t\tposition: {}, value {}".format(p.x, p.val))
                 for pp in self.parts:
                     pp.g = p.x.copy()
                     pp.gval = p.val
 
         phi1 = random.random()
         phi2 = random.random()
-        print("\tUpdating velocity and position, phi1 = {}, phi2 = {}".format(phi1,phi2))
+        if info == 1:
+            print("\tUpdating velocity and position, phi1 = {}, phi2 = {}".format(phi1,phi2))
         for p in self.parts:
             for d in range(dim):
                 newVid = p.v[d]
@@ -123,15 +127,21 @@ class Swarm:
                 if p.x[d] < lims[0]:
                     p.x[d] = lims[0]
             p.val = function(self.fname, p.x)
-            print("\t\tParticle {}: x {}, value {}".format(self.parts.index(p), p.x, p.val))
+            if info == 1:
+                print("\t\tParticle {}: x {}, value {}".format(self.parts.index(p), p.x, p.val))
 
-    def checkConv(self, majority=1.0):
+    def centroid(self):
         centroid = [0 for i in range(dim)]
         for p in self.parts:
             for d in range(dim):
                 centroid[d] += p.x[d]/len(self.parts)
+        return centroid
+
+    def checkConv(self, majority=1.0):
+        centroid = self.centroid()
         inParts = 0
-        print("\tCentroid: {}".format(centroid))
+        if info == 1:
+            print("\tCentroid: {}".format(centroid))
         for p in self.parts:
             distance = 0
             for d in range(dim):
@@ -143,20 +153,19 @@ class Swarm:
         return allIn
 
     def estimate(self):
-        centroid = [0 for i in range(dim)]
-        for p in self.parts:
-            for d in range(dim):
-                centroid[d] += p.x[d]/len(self.parts)
+        centroid = self.centroid()
         return centroid, function(self.fname, centroid)
 
     def optimization(self):
         tries = 1
         ini = time.time()
         while not self.checkConv(majority=majority):
-            print("Iteration {}:".format(tries))
+            if info == 1:
+                print("Iteration {}:".format(tries))
             self.update()
             tries += 1
-        print("End of otimization!")
+        if info == 1:
+            print("End of otimization!")
         est = self.estimate()
         print("Found minimum: {}, value = {} after {} tries".format(est[0], est[1], tries))
         delTime = time.time() - ini
@@ -245,11 +254,14 @@ class DifferentialEvolution:
                 for i in range(L):
                     g.u[(n+i)%dim] = g.v[(n+i)%dim]
 
-            print("\tParticle {}: x = {} u = {}".format(self.gens.index(g),g.x, g.u))
+            if info == 1:
+                print("\tParticle {}: x = {} u = {}".format(self.gens.index(g),g.x, g.u))
             uval = function(g.fname, g.u)
-            print("\t             f(x) = {} f(u) = {}".format(g.val, uval))
+            if info == 1:
+                print("\t             f(x) = {} f(u) = {}".format(g.val, uval))
             if g.val > uval:
-                print("\t\tU was chosen!")
+                if info == 1:
+                    print("\t\tU was chosen!")
                 g.x = g.u.copy()
                 g.val = uval
 
@@ -257,17 +269,20 @@ class DifferentialEvolution:
         tries = 1
         ini = time.time()
         while not self.checkConv(majority=majority):
-            print("Iteration {}:".format(tries))
+            if info == 1:
+                print("Iteration {}:".format(tries))
             self.update()
             tries += 1
             best = self.findBest()
             if best.val == 0:
-                print("End of otimization!")
+                if info == 1:
+                    print("End of otimization!")
                 print("Found minimum: {}, value = {} in {} tries".format(best.x, best.val, tries))
                 delTime = time.time() - ini
                 return (best.x, best.val, tries, delTime)
 
-        print("End of otimization!")
+        if info == 1:
+            print("End of otimization!")
         est = self.estimate()
         print("Found minimum: {}, value = {} in {} tries".format(est[0], est[1], tries))
         delTime = time.time() - ini
@@ -276,7 +291,8 @@ class DifferentialEvolution:
     def checkConv(self, majority = 1.0):
         centroid = self.centroid()
         inGens = 0
-        print("\tCentroid: {}".format(centroid))
+        if info == 1:
+            print("\tCentroid: {}".format(centroid))
         for p in self.gens:
             distance = 0
             for d in range(dim):
@@ -302,16 +318,19 @@ class DifferentialEvolution:
 
 
 if __name__ == '__main__':
+    #info = information level: (0 = no prints, 1 = all prints)
+    info = 0
     dim = 8
     lims = [1,8]
     convRad = 0.01
     majority = 0.8
     PSOSwarm = Swarm(w=0.1,selfc=2.5,swarmc=2.5,npart=60,fname="Queens")
     PSOconfig, PSOattacks, PSOtries, PSOtime = PSOSwarm.optimization()
-    DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 1, "exp")
+    DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 2, "exp")
     DEconfig, DEattacks, DEtries, DEtime = DE.optimization()
-    print("Number of queens: {}".format(dim))
-    print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime, PSOattacks))
-    printMatrix(PSOconfig, sys.stdout)
-    print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))
-    printMatrix(DEconfig, sys.stdout)
+    if info == 1:
+        print("Number of queens: {}".format(dim))
+        print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime, PSOattacks))
+        printMatrix(PSOconfig, sys.stdout)
+        print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))
+        printMatrix(DEconfig, sys.stdout)
