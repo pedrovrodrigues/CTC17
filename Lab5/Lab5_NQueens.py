@@ -112,7 +112,7 @@ class Swarm:
         print("\tUpdating velocity and position, phi1 = {}, phi2 = {}".format(phi1,phi2))
         for p in self.parts:
             for d in range(dim):
-                newVid = self.w * p.v[d]
+                newVid = p.v[d]
                 newVid += self.selfc * phi1 * (p.p[d] - p.x[d])
                 newVid += self.swarmc * phi2 * (p.g[d] - p.x[d])
                 newVid = self.constrict*newVid
@@ -125,20 +125,21 @@ class Swarm:
             p.val = function(self.fname, p.x)
             print("\t\tParticle {}: x {}, value {}".format(self.parts.index(p), p.x, p.val))
 
-    def checkConv(self):
+    def checkConv(self, majority=1.0):
         centroid = [0 for i in range(dim)]
         for p in self.parts:
             for d in range(dim):
                 centroid[d] += p.x[d]/len(self.parts)
-        allIn = True
+        inParts = 0
         print("\tCentroid: {}".format(centroid))
         for p in self.parts:
             distance = 0
             for d in range(dim):
                 distance += (p.x[d]-centroid[d])*(p.x[d]-centroid[d])
             distance = math.sqrt(distance)
-            if distance > convRad:
-                allIn = False
+            if distance < convRad:
+                inParts += 1
+        allIn = (inParts >= majority*len(self.parts))
         return allIn
 
     def estimate(self):
@@ -150,14 +151,16 @@ class Swarm:
 
     def optimization(self):
         tries = 1
-        while not self.checkConv():
+        ini = time.time()
+        while not self.checkConv(majority=majority):
             print("Iteration {}:".format(tries))
             self.update()
             tries += 1
         print("End of otimization!")
         est = self.estimate()
-        print("Found minimum: {}, value = {}".format(est[0], est[1]))
-        return est
+        print("Found minimum: {}, value = {} after {} tries".format(est[0], est[1], tries))
+        delTime = time.time() - ini
+        return (est[0], est[1], tries, delTime)
 
 
 class Genome:
@@ -252,7 +255,8 @@ class DifferentialEvolution:
 
     def optimization(self):
         tries = 1
-        while not self.checkConv():
+        ini = time.time()
+        while not self.checkConv(majority=majority):
             print("Iteration {}:".format(tries))
             self.update()
             tries += 1
@@ -260,24 +264,27 @@ class DifferentialEvolution:
             if best.val == 0:
                 print("End of otimization!")
                 print("Found minimum: {}, value = {} in {} tries".format(best.x, best.val, tries))
-                return best.x, best.val
+                delTime = time.time() - ini
+                return (best.x, best.val, tries, delTime)
 
         print("End of otimization!")
         est = self.estimate()
         print("Found minimum: {}, value = {} in {} tries".format(est[0], est[1], tries))
-        return est
+        delTime = time.time() - ini
+        return est[0], est[1], tries, delTime
 
-    def checkConv(self):
+    def checkConv(self, majority = 1.0):
         centroid = self.centroid()
-        allIn = True
+        inGens = 0
         print("\tCentroid: {}".format(centroid))
         for p in self.gens:
             distance = 0
             for d in range(dim):
                 distance += (p.x[d]-centroid[d])*(p.x[d]-centroid[d])
             distance = math.sqrt(distance)
-            if distance > convRad:
-                allIn = False
+            if distance < convRad:
+                inGens += 1
+        allIn = (inGens >= majority*len(self.gens))
         return allIn
 
     def estimate(self):
@@ -298,11 +305,12 @@ if __name__ == '__main__':
     dim = 8
     lims = [1,8]
     convRad = 0.01
+    majority = 0.8
     PSOSwarm = Swarm(w=0.1,selfc=2.5,swarmc=2.5,npart=60,fname="Queens")
-    PSOconfig, PSOattacks = PSOSwarm.optimization()
+    PSOconfig, PSOattacks, PSOtries, PSOtime = PSOSwarm.optimization()
     DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 1, "exp")
-    DE config, DEattacks = DE.optimization()
-    print("PSO Solution ({} attacks remaining):".format(PSOattacks))
+    DEconfig, DEattacks, DEtries, DEtime = DE.optimization()
+    print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime, PSOattacks))
     printMatrix(PSOconfig, sys.stdout)
-    print("DE Solution ({} attacks remaining):".format(DEattacks))
+    print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))
     printMatrix(DEconfig, sys.stdout)
