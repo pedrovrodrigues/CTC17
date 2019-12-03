@@ -310,6 +310,7 @@ if __name__ == '__main__':
     PSOconfig, PSOattacks, PSOtries, PSOtime = PSOSwarm.optimization()
     DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 1, "exp")
     DEconfig, DEattacks, DEtries, DEtime = DE.optimization()
+    print("Number of queens: {}".format(dim))
     print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime, PSOattacks))
     printMatrix(PSOconfig, sys.stdout)
     print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))

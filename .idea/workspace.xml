@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8d4eebe4-b621-43e8-92a4-8ae7f6e4d622" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab5/DE.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab5/DE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab5/PSO.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab5/PSO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lab1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab1/quero.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab1/quero.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" beforeDir="false" afterPath="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,8 +19,8 @@
       <file leaf-file-name="DE.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Lab5/DE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="179" lean-forward="true" selection-start-line="177" selection-end-line="179" />
+            <state>
+              <caret line="179" selection-start-line="177" selection-end-line="179" />
               <folding>
                 <element signature="e#140#1474#0" />
               </folding>
@@ -31,20 +31,11 @@
       <file leaf-file-name="Lab5_NQueens.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Lab5/Lab5_NQueens.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1870">
-              <caret line="185" column="6" lean-forward="true" selection-start-line="185" selection-start-column="6" selection-end-line="185" selection-end-column="6" />
+            <state relative-caret-position="153">
+              <caret line="312" column="45" selection-start-line="312" selection-start-column="45" selection-end-line="312" selection-end-column="45" />
               <folding>
-                <element signature="e#1281#4113#0" />
+                <element signature="e#4697#4903#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lab2_1_1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="143" lean-forward="true" selection-start-line="135" selection-end-line="143" />
             </state>
           </provider>
         </entry>
@@ -52,8 +43,8 @@
       <file leaf-file-name="PSO.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Lab5/PSO.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="144" lean-forward="true" selection-start-line="141" selection-end-line="144" />
+            <state relative-caret-position="232">
+              <caret line="137" lean-forward="true" selection-start-line="137" selection-end-line="137" />
             </state>
           </provider>
         </entry>
@@ -98,6 +89,7 @@
         <option value="$PROJECT_DIR$/Lab4/Lab4.py" />
         <option value="$PROJECT_DIR$/Lab5/DE.py" />
         <option value="$PROJECT_DIR$/Lab5/PSO.py" />
+        <option value="$PROJECT_DIR$/Lab5/VPSO.py" />
         <option value="$PROJECT_DIR$/Lab5/Lab5_NQueens.py" />
       </list>
     </option>
@@ -114,6 +106,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -124,18 +117,12 @@
             <path>
               <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
               <item name="CTC17" type="462c0819:PsiDirectoryNode" />
-              <item name="Lab2" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CTC17" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CTC17" type="462c0819:PsiDirectoryNode" />
               <item name="Lab5" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -144,6 +131,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\pedri\Documents\ITA\COMP_4_semestre\CTC17\Lab5" />
       <recent name="C:\Users\pedri\Documents\ITA\COMP_4_semestre\CTC17\Lab2" />
     </key>
   </component>
@@ -173,24 +161,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lab5/DE.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="Lab2_1_2" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CTC17" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Lab2" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lab2/Lab2_1_2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -250,20 +220,38 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="VPSO" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CTC17" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Lab5" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lab5/VPSO.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <list>
       <item itemvalue="Python.Lab3" />
-      <item itemvalue="Python.Lab2_1_2" />
       <item itemvalue="Python.PSO" />
       <item itemvalue="Python.DE" />
       <item itemvalue="Python.Lab5_NQueens" />
+      <item itemvalue="Python.VPSO" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Lab5_NQueens" />
+        <item itemvalue="Python.VPSO" />
         <item itemvalue="Python.DE" />
         <item itemvalue="Python.PSO" />
         <item itemvalue="Python.Lab3" />
-        <item itemvalue="Python.Lab2_1_2" />
       </list>
     </recent_temporary>
   </component>
@@ -370,22 +358,29 @@
       <option name="project" value="LOCAL" />
       <updated>1573870972264</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Lab5: DE/PSO">
+      <created>1575398162760</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1575398162760</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49872774" visible="true" weight="0.12708019" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49444443" visible="true" weight="0.1301059" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50075644" side_tool="true" weight="0.32954547" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.36201298" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.41558442" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32954547" />
-      <window_info id="Structure" order="1" sideWeight="0.50127226" side_tool="true" visible="true" weight="0.12708019" />
+      <window_info id="Structure" order="1" sideWeight="0.50555557" side_tool="true" visible="true" weight="0.1301059" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49924356" weight="0.32954547" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -440,11 +435,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Lab2/debug_HC.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13832" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
@@ -741,36 +731,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="143" lean-forward="true" selection-start-line="135" selection-end-line="143" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Lab5/PSO.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="144" lean-forward="true" selection-start-line="141" selection-end-line="144" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Lab5/DE.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="179" lean-forward="true" selection-start-line="177" selection-end-line="179" />
+        <state>
+          <caret line="179" selection-start-line="177" selection-end-line="179" />
           <folding>
             <element signature="e#140#1474#0" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Lab5/VPSO.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="102" column="36" lean-forward="true" selection-start-line="102" selection-start-column="36" selection-end-line="102" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Lab5/PSO.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="137" lean-forward="true" selection-start-line="137" selection-end-line="137" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Lab2/Lab2_1_1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="152" column="30" lean-forward="true" selection-start-line="152" selection-start-column="30" selection-end-line="152" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Lab5/Lab5_NQueens.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1870">
-          <caret line="185" column="6" lean-forward="true" selection-start-line="185" selection-start-column="6" selection-end-line="185" selection-end-column="6" />
+        <state relative-caret-position="153">
+          <caret line="312" column="45" selection-start-line="312" selection-start-column="45" selection-end-line="312" selection-end-column="45" />
           <folding>
-            <element signature="e#1281#4113#0" />
+            <element signature="e#4697#4903#0" />
           </folding>
         </state>
       </provider>
