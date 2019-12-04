@@ -159,7 +159,8 @@ class Swarm:
     def optimization(self):
         tries = 1
         ini = time.time()
-        while not self.checkConv(majority=majority):
+
+        while not self.checkConv(majority=majority) and tries < 2000:
             if info == 1:
                 print("Iteration {}:".format(tries))
             self.update()
@@ -167,8 +168,8 @@ class Swarm:
         if info == 1:
             print("End of otimization!")
         est = self.estimate()
-        print("Found minimum: {}, value = {} after {} tries".format(est[0], est[1], tries))
         delTime = time.time() - ini
+        print("Found minimum: {}, value = {} after {} tries, time:{}".format(est[0], est[1], tries, delTime))
         return (est[0], est[1], tries, delTime)
 
 
@@ -274,18 +275,19 @@ class DifferentialEvolution:
             self.update()
             tries += 1
             best = self.findBest()
+
             if best.val == 0:
                 if info == 1:
                     print("End of otimization!")
-                print("Found minimum: {}, value = {} in {} tries".format(best.x, best.val, tries))
                 delTime = time.time() - ini
+                print("Found minimum: {}, value = {} in {} tries, time:{}".format(best.x, best.val, tries, delTime))
                 return (best.x, best.val, tries, delTime)
 
         if info == 1:
             print("End of otimization!")
         est = self.estimate()
-        print("Found minimum: {}, value = {} in {} tries".format(est[0], est[1], tries))
         delTime = time.time() - ini
+        print("Found minimum: {}, value = {} in {} tries, time:{}".format(est[0], est[1], tries, delTime))
         return est[0], est[1], tries, delTime
 
     def checkConv(self, majority = 1.0):
@@ -318,19 +320,49 @@ class DifferentialEvolution:
 
 
 if __name__ == '__main__':
-    #info = information level: (0 = no prints, 1 = all prints)
-    info = 0
-    dim = 8
-    lims = [1,8]
-    convRad = 0.01
-    majority = 0.8
-    PSOSwarm = Swarm(w=0.1,selfc=2.5,swarmc=2.5,npart=60,fname="Queens")
-    PSOconfig, PSOattacks, PSOtries, PSOtime = PSOSwarm.optimization()
-    DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 2, "exp")
-    DEconfig, DEattacks, DEtries, DEtime = DE.optimization()
-    if info == 1:
-        print("Number of queens: {}".format(dim))
-        print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime, PSOattacks))
-        printMatrix(PSOconfig, sys.stdout)
-        print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))
-        printMatrix(DEconfig, sys.stdout)
+
+    sumPSO = 0
+    timePSO = 0
+    sumDE = 0
+    timeDE = 0
+    iterations = 30
+    triesPSO = 0
+    triesDE = 0
+    for i in range(iterations):
+        # info = information level: (0 = no prints, 1 = all prints)
+        info = 0
+        dim = 8
+        lims = [1, 8]
+        convRad = 0.01
+        majority = 0.8
+        PSOSwarm = Swarm(w=0.1, selfc=2.5, swarmc=2.5, npart=20, fname="Queens")
+        # <<<<<<< Updated upstream
+        PSOconfig, PSOattacks, PSOtries, PSOtime = PSOSwarm.optimization()
+        DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 2, "exp")
+        DEconfig, DEattacks, DEtries, DEtime = DE.optimization()
+        sumPSO += PSOattacks
+        sumDE += DEattacks
+        timePSO += PSOtime
+        timeDE += DEtime
+        triesDE += DEtries
+        triesPSO += PSOtries
+        if info == 1:
+            print("Number of queens: {}".format(dim))
+            print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime,
+                                                                                             PSOattacks))
+            printMatrix(PSOconfig, sys.stdout)
+            print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))
+            printMatrix(DEconfig, sys.stdout)
+
+    print("PSO - sum:", sumPSO,  " average: ", sumPSO/iterations, " time: ", timePSO/iterations, " triesPSO: ", triesPSO/iterations)
+    print("DE - sum:", sumDE, " average: ", sumDE/iterations, " time: ", timeDE/iterations, " triesDE: ", triesDE/iterations)
+
+# =======
+#     PSOconfig, PSOattacks = PSOSwarm.optimization()
+#     DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 1, "exp")
+#     DEconfig, DEattacks = DE.optimization()
+#     print("PSO Solution ({} attacks remaining):".format(PSOattacks))
+#     printMatrix(PSOconfig, sys.stdout)
+#     print("DE Solution ({} attacks remaining):".format(DEattacks))
+#     printMatrix(DEconfig, sys.stdout)
+# >>>>>>> Stashed changes
