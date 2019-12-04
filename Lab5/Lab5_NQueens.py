@@ -325,9 +325,15 @@ if __name__ == '__main__':
     timePSO = 0
     sumDE = 0
     timeDE = 0
-    iterations = 30
+    iterations = 100
     triesPSO = 0
     triesDE = 0
+    sumPSOvet = []
+    timePSOvet = []
+    sumDEvet = []
+    timeDEvet = []
+    triesPSOvet = []
+    triesDEvet = []
     for i in range(iterations):
         # info = information level: (0 = no prints, 1 = all prints)
         info = 0
@@ -340,12 +346,12 @@ if __name__ == '__main__':
         PSOconfig, PSOattacks, PSOtries, PSOtime = PSOSwarm.optimization()
         DE = DifferentialEvolution(15, 0.7, 0.75, "Queens", "best", 2, "exp")
         DEconfig, DEattacks, DEtries, DEtime = DE.optimization()
-        sumPSO += PSOattacks
-        sumDE += DEattacks
-        timePSO += PSOtime
-        timeDE += DEtime
-        triesDE += DEtries
-        triesPSO += PSOtries
+        sumPSOvet.append(PSOattacks)
+        sumDEvet.append(DEattacks)
+        timePSOvet.append(PSOtime)
+        timeDEvet.append(DEtime)
+        triesDEvet.append(DEtries)
+        triesPSOvet.append(PSOtries)
         if info == 1:
             print("Number of queens: {}".format(dim))
             print("PSO Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(PSOtries, PSOtime,
@@ -354,8 +360,50 @@ if __name__ == '__main__':
             print("DE Solution after {} tries ({:.3f} s) with {} attacks remaining:".format(DEtries, DEtime, DEattacks))
             printMatrix(DEconfig, sys.stdout)
 
-    print("PSO - sum:", sumPSO,  " average: ", sumPSO/iterations, " time: ", timePSO/iterations, " triesPSO: ", triesPSO/iterations)
-    print("DE - sum:", sumDE, " average: ", sumDE/iterations, " time: ", timeDE/iterations, " triesDE: ", triesDE/iterations)
+    sumPSO = sum(sumPSOvet)/iterations
+    sumPSOstd = 0
+    for i in range(iterations):
+        sumPSOstd = sumPSOstd + (sumPSOvet[i] - sumPSO)*(sumPSOvet[i] - sumPSO)
+    sumPSOstd = math.sqrt(sumPSOstd/(iterations-1))
+
+    timePSO = sum(timePSOvet)/iterations
+    timePSOstd = 0
+    for i in range(iterations):
+        timePSOstd = timePSOstd + (timePSOvet[i] - timePSO)*(timePSOvet[i] - timePSO)
+    timePSOstd = math.sqrt(timePSOstd/(iterations-1))
+
+    sumDE = sum(sumDEvet)/iterations
+    sumDEstd = 0
+    for i in range(iterations):
+        sumDEstd = sumDEstd + (sumDEvet[i] - sumDE)*(sumDEvet[i] - sumDE)
+    sumDEstd = math.sqrt(sumDEstd/(iterations-1))
+
+    timeDE = sum(timeDEvet)/iterations
+    timeDEstd = 0
+    for i in range(iterations):
+        timeDEstd = timeDEstd + (timeDEvet[i] - timeDE)*(timeDEvet[i] - timeDE)
+    timeDEstd = math.sqrt(timeDEstd/(iterations-1))
+
+    triesPSO = sum(triesPSOvet)/iterations
+    triesPSOstd = 0
+    for i in range(iterations):
+        triesPSOstd = triesPSOstd + (triesPSOvet[i] - triesPSO)*(triesPSOvet[i] - triesPSO)
+    triesPSOstd = math.sqrt(triesPSOstd/(iterations-1))
+
+    triesDE = sum(triesDEvet)/iterations
+    triesDEstd = 0
+    for i in range(iterations):
+        triesDEstd = triesDEstd + (triesDEvet[i] - triesDE)*(triesDEvet[i] - triesDE)
+    triesDEstd = math.sqrt(triesDEstd/(iterations-1))
+
+    print("PSO")
+    print("\taverage: {:3f} +- {:3f}".format(sumPSO, sumPSOstd))
+    print("\ttime: {:3f} +- {:3f}".format(timePSO, timePSOstd))
+    print("\ttries: {:3f} +- {:3f}".format(triesPSO, triesPSOstd))
+    print("DE")
+    print("\taverage: {:3f} +- {:3f}".format(sumDE, sumDEstd))
+    print("\ttime: {:3f} +- {:3f}".format(timeDE, timeDEstd))
+    print("\ttries: {:3f} +- {:3f}".format(triesDE, triesDEstd))
 
 # =======
 #     PSOconfig, PSOattacks = PSOSwarm.optimization()
